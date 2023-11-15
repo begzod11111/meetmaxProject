@@ -1,0 +1,106 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'accounts/css/user_settings.css' %}">
+{% endblock %}
+
+{% block content %}
+				{% if messages %}
+				<ul class="messages">
+						{% for message in messages %}
+						<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+						{% endfor %}
+						<button type="button" id="close-messages">Close</button>
+				</ul>
+			{% endif %}
+    <div class="w-80-ct">
+							<div class="settings-ct">
+                    <div class="tabs-bar">
+                        <ul>
+                            <li onclick="tabs(0)" class="tabs"><i class="ri-user-line"></i><span>Edit Profile</span><i id="active-tab" class="ri-arrow-right-s-line"></i></li>
+                            <li onclick="tabs(1)" class="tabs"><i class="ri-translate-2"></i><span>Language</span></li>
+                            <li onclick="tabs(2)" class="tabs"><i class="ri-prohibited-line"></i><span>Blocking</span></li>
+                            <li onclick="tabs(3)" class="tabs"><i class="ri-notification-3-line"></i><span>Notification</span></li>
+                            <li onclick="tabs(4)" class="tabs"><i class="ri-shield-check-line"></i><span>Password & Security</span></li>
+                            <li onclick="tabs(5)" class="tabs"><i class="ri-history-line"></i><span>Activiti Log</span></li>
+                            <li onclick="tabs(6)" class="tabs"><i class="ri-eye-line"></i><span>Viewing & Sharing</span></li>
+                        </ul>
+                    </div>
+                    <div class="tabs-ct" id="t1">
+                            <h2>Edit profile</h2>
+                        <form action="{% url 'accounts:user-update' user_slug=user.profile.slug %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+                            <div class="user-photo">
+
+                                <div class="window-user-photo">
+                                    <img src="{{ user.profile.avatar.url }}" alt="">
+                                </div>
+                                <label for="{{ user_profile_form.avatar.id_for_label }}" class="custom-file-upload-user">
+                                    <i class="ri-upload-cloud-2-line"></i>
+                                </label>
+                                {{ user_profile_form.avatar }}
+                            </div>
+                            <div class="main-form">
+                                {% for i in user_form %}
+                                <div class="input-item">
+                                    <label for="{{ i.id_for_label }}">{{ i.label }}</label>
+                                    {{ i }}
+																		{% if i.errors %}
+																			{{ i.error }}
+																		{% endif %}
+                                </div>
+                                {% endfor %}
+                                {% for i in user_profile_form %}
+                                    {% if i == user_profile_form.instagram %}
+                                        <h2>Social link</h2>
+                                    {% endif %}
+                                    {% if i != user_profile_form.avatar %}
+                                        <div class="input-item">
+                                            <label for="{{ i.id_for_label }}">{{ i.label }}</label>
+                                            {{ i }}
+																				{{ i.error }}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+                            <div class="form-bt-ct">
+                                <button type="submit" class="save-bt" id="save-bt">Save</button>
+                                <button>Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tabs-ct" style="display: none">
+                    </div>
+                    <div class="tabs-ct" style="display: none">bloc</div>
+                    <div class="tabs-ct" style="display: none">nitif</div>
+                    <div class="tabs-ct" style="display: none">
+                        <form method="post" action="{% url 'accounts:user-change-password' user_slug=user.profile.slug %}">{% csrf_token %}
+													{% for i in change_password_form %}
+															 <div class="input-item">
+																	 <label for="{{ i.id_for_label }}">{{ i.label }}</label>
+																	 {{ i }}
+															 </div>
+													{% endfor %}
+													<div class="form-bt-ct">
+														<button type="submit" class="save-bt">Save</button>
+														<button>Cancel</button>
+													</div>
+                        </form>
+                    </div>
+                    <div class="tabs-ct" style="display: none">activ</div>
+                    <div class="tabs-ct" style="display: none">view</div>
+              </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+	<script>
+		$('.main-content').on('click', '#close-messages', function () {
+				let ctMassages = $('.messages')
+				ctMassages.addClass('close')
+    })
+	</script>
+{% endblock %}

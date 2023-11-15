@@ -1,0 +1,149 @@
+.w-80-ct button {
+    border-radius: 5px;
+    border: #918888 2px solid;
+}
+
+
+.tabs-menu-ct button a {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.tabs-menu-ct {
+    margin-bottom: 10px;
+    height: 60px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    background: #ffffff;
+    display: flex;
+}
+
+.tabs-menu-ct button {
+    cursor: auto;
+    height: 100%;
+    width: 33.33%;
+}
+
+.w-80-ct .tabs-menu-ct button:last-child {
+    margin: 0;
+}
+
+.tabs-menu-ct button:not(:last-child) {
+    margin-right: 10px;
+    width: calc(33.33% - 10px);
+}
+
+
+
+.tabs-menu-ct .activ {
+    border: none;
+    background: #6d5dfc;
+    color: #FFFFFF;
+}
+
+/*button:hover {*/
+/*    border-color: transparent;*/
+/*    background: #6d5dfc;*/
+/*    color: #FFFFFF;*/
+/*}*/
+
+.list_user {
+    max-height: calc(100% - 75px);
+    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+
+}
+
+
+.ct-user {
+    margin-top: 10px;
+    flex-wrap: wrap;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    width: calc(33.33% - 10px);
+    background-color: #FFFFFF;
+    height: 150px;
+}
+
+.ct-user:not(:last-child) {
+    margin-right: 10px;
+}
+
+.ct-user .img-user-ct div {
+    height: 70px;
+    width: 70px;
+    overflow: hidden;
+    border-radius: 50%;
+    position: relative;
+}
+
+.ct-user .img-user-ct div img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.img-user-ct {
+    order: 1;
+    height: 60%;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
+
+    display: flex;
+}
+
+.ct-bts-user {
+    padding: 10px;
+    display: flex;
+    order: 3;
+    width: 100%;
+    height: 40%;
+}
+
+.links-user {
+    order: 2;
+    width: 70%;
+    height: 60%;
+}
+
+.list_user .user-name {
+    font-size: 20px;
+}
+.list_user span {
+    display: block;
+    margin: 0;
+    font-size: 12px;
+}
+
+.links {
+    display: flex;
+}
+
+.links li:not(:last-child) {
+    margin-right: 10px;
+}
+
+.ct-bts-user button:not(:last-child) {
+    margin-right: 20px;
+
+}
+
+.ct-bts-user button {
+    height: 100%;
+    width: calc(50% - 10px);
+
+}
+
+.ct-bts-user .follow {
+    border: none;
+    background: #6d5dfc;
+    color: #FFFFFF;
+}

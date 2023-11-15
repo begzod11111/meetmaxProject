@@ -1,0 +1,113 @@
+form {
+    z-index: 1;
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    padding: 30px;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    border-radius: 10px;
+    transition: all .5s ease;
+}
+
+.form-ct {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+form div {
+    border-radius: 5px;
+    overflow: hidden;
+    align-items: center;
+    position: relative;
+    display: flex;
+}
+
+form .form-input {
+    margin: 10px 0;
+
+}
+form div i {
+    z-index: 2;
+    background: #e4e4ee;
+    padding: 5px;
+    font-size: 20px;
+    position: absolute;
+}
+form input {
+    z-index: 3;
+    border-radius: 5px;
+    border: 1px solid black;
+    padding: 5px 5px 5px 30px;
+    height: 30px;
+    width: 300px;
+
+}
+
+form .form-password {
+    margin: 10px 0;
+}
+
+form button {
+    margin-top: 10px;
+    padding: 5px 20px;
+    background: #6d5dfc;
+    color: #FFFFFF;
+    border-radius: 5px;
+}
+
+form a {
+    position: static;
+    display: block;
+}
+form a i {
+    padding: 0;
+    position: static;
+}
+
+.meetmax-logo{
+    font-size: 25px;
+    color: #6d5dfc;
+}
+
+.meetmax-logo .meet {
+    color: black;
+    margin-left: 5px;
+}
+
+form input:focus {
+    border: 2px solid #6d5dfc;
+}
+
+form button:active {
+    background: #004db2;
+    color: #FFFFFF;
+}
+
+.active-form {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-bt {
+    position: absolute;
+    padding: 0 5px;
+    top: 0;
+    right: 10px;
+}
+
+.bt-open-form {
+    background: none;
+    color: #6d5dfc;
+}
+
+.bt-open-form:active {
+    background: none;
+    color: #6d5dfc;
+    text-decoration: underline;
+}

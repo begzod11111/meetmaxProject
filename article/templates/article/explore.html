@@ -1,0 +1,34 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'article/css/explore.css' %}">
+{% endblock %}
+
+
+{% block content %}
+	<div class="posts-ex-ct">
+				{% for i in articles %}
+					<div class="banner-post">
+						<div class="article-img-ct">
+							<img class="media" src="{{ i.banner.url }}" alt="banner">
+						</div>
+						<div class="date-post">
+								<div class="tags">
+									{% for t in i.tags.all %}
+										<a href="">{{ t.name }}</a>
+									{% endfor %}
+								</div>
+								<span class="old-post">{{ i.publish_date }}</span>
+
+								<h2>{{ i.title|slice:'60'}} . . .</h2>
+								<span>{{ i.text|slice:'60'}}.....<br></span>
+								<a href="{{ i.get_absolute_url }}" class="read">Read more<i class="ri-arrow-right-up-line"></i></a>
+						</div>
+					</div>
+				{% endfor %}
+	</div>
+
+
+{% endblock %}

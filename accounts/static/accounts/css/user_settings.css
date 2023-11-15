@@ -1,0 +1,183 @@
+
+
+.settings-ct {
+    position: relative;
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    background: white;
+}
+
+
+.tabs-bar {
+    padding-right: 20px;
+    height: 100%;
+    width: 20%;
+    border-right: 1px black solid;
+}
+
+.tabs-bar ul li {
+    cursor: default;
+    font-size: 15px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid black;
+    transition: color .4s step-start;
+}
+
+.tabs-bar ul li:hover {
+    color: #6d5dfc;
+}
+
+.tabs-bar ul li span {
+    margin-left: 10px;
+}
+
+.tabs-bar ul li i {
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.ri-arrow-right-s-line {
+    position: absolute;
+    right: 0;
+    font-weight: bold;
+}
+
+.tabs-ct {
+    overflow: auto;
+    height: 100%;
+    width: 79%;
+}
+
+.tabs-ct h2 {
+    width: calc(100% - 40px);
+    margin: 20px;
+    font-size: 24px;
+}
+
+.user-photo {
+    position: relative;
+    margin: 20px;
+}
+
+.user-photo .window-user-photo img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+
+}
+
+.window-user-photo {
+    z-index: 2;
+    overflow: hidden;
+    border-radius: 50%;
+    display: flex;
+    height: 150px;
+    width: 150px;
+    background: #ffffff;
+
+}
+
+.custom-file-upload-user {
+    bottom: 5px;
+    left: 15%;
+    font-size: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background: #debfbf;
+    padding: 3px;
+}
+
+
+.main-form {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+.tabs-ct .input-item {
+    margin: 20px;
+    width: calc(50% - 40px);
+}
+
+
+.tabs-ct .input-item label {
+    display: block;
+}
+
+
+.tabs-ct .input-item input {
+    padding: 5px 5px 5px 10px;
+    width: 100%;
+    margin-top: 10px;
+    border: 1px black solid;
+    border-radius: 5px;
+
+}
+.tabs-ct form button {
+    margin-right: 20px;
+    border-radius: 12px;
+    height: 100%;
+    width: 15%;
+    border: 1px solid black;
+    color: #0c0000;
+}
+
+.tabs-ct form .save-bt {
+    color: #ebeaea;
+    border: none;
+    background: #6d5dfc;
+}
+
+.form-bt-ct {
+    margin: 20px 20px;
+    height: 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: calc(100% - 40px);
+}
+
+
+.messages {
+    flex-wrap: wrap;
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 20px 10px 60px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    background: #6d5dfc;
+    z-index: 999;
+    margin: 20px;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 100ms ease;
+}
+
+#close-messages {
+    position: absolute;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #FFFFFF;
+    background: #bdbbc5;
+    bottom: 0;
+    right: 0;
+    margin: 20px 20px 10px 0;
+}
+
+.close {
+    visibility: hidden;
+    opacity: 0;
+}

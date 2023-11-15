@@ -1,0 +1,167 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+
+{% block title %}{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'accounts/css/my_community.css' %}">
+{% endblock %}
+
+{% block content %}
+	{% load user_tags %}
+    <div class="w-80-ct">
+        <div class="tabs-menu-ct">
+            <button class="{% if nav == 1 %}activ{% endif %}" type="submit"><a href="{% url 'accounts:user-community' following_or_followers='following' user_slug=user.profile.slug %}">{{ user.profile.following.all.count }} Following</a></button>
+            <button class="{% if nav == 2 %}activ{% endif %}" type="submit"><a href="{% url 'accounts:user-community' following_or_followers='followers' user_slug=user.profile.slug %}">{{ user.profile.get_followers_count }} Followers</a></button>
+            <button class="{% if nav == 3 %}activ{% endif %}" type="submit"><a href="">People You Might Like</a></button>
+        </div>
+        <div class="list_user" id="container">
+            {% for i in page_obj %}
+                <div class="ct-user" id="ct-user">
+                    <div class="img-user-ct">
+                        <div>
+                            <img src="{{ i.avatar.url }}" alt="" class="">
+                        </div>
+                    </div>
+                    <div class="links-user">
+                        <span class="user-name">@{{ i.user.username }}</span>
+                        <span>{{ i.bio }}</span>
+                        <ul class="links">
+                            <li><a href=""><i class="ri-instagram-line"></i></a></li>
+                            <li><a href=""><i class="ri-facebook-circle-line"></i></a></li>
+                            <li><a href=""><i class="ri-twitter-line"></i></a></li>
+                            <li><a href=""><i class="ri-earth-line"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="ct-bts-user">
+											{% if i in user.profile.following.all %}
+                        <button class="bt-like" type="submit" data-value="{{ i.slug }}">Unfollow</button>
+											{% else %}
+												<button class="bt-like follow" type="submit" data-value="{{ i.slug }}">Follow</button>
+											{% endif %}
+                        <button>Ignore</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+	<script>
+
+	let containerMain = $('#container')
+	 containerMain.on('click', '.bt-like', function (){
+				let btLike = $(this)
+
+        let slugUser = btLike.data('value')
+				$.ajax({
+						url: '{% url 'accounts:user-follow' user_slug=user.profile.slug %}',
+						method : 'POST',
+						dataType: 'json',
+						data: {
+								'csrfmiddlewaretoken': csrf,
+								'user_slug': slugUser,
+            },
+						success:function (data){
+							if (data['flag']){
+								btLike.removeClass('follow')
+								btLike.text('Unfollow')
+              }
+							else {
+								btLike.addClass('follow')
+								btLike.text('Follow')
+              }
+            },
+						error: function(xhr, status, error) {
+              console.log(error);
+          	}
+				})
+	 })
+
+	let page = 1
+	if (containerMain.children().length === 0){
+        $.ajax({
+						url: "{% url 'accounts:user-community' following_or_followers='following' user_slug=user.profile.slug %}",
+						dataType: 'json',
+						method: "GET",
+						data: {
+								'page': page
+            },
+						success: function (data) {
+
+            }
+				})
+	}
+	let flagAjax = true
+	containerMain.scroll(function() {
+		let container = $(this);
+		if (flagAjax){
+			if (container.scrollTop() + container.innerHeight() >= container[0].scrollHeight) {
+				page++
+				$.ajax({
+						url: '',
+						type: "GET",
+						dataType: "json",
+						data: {
+								'page': page
+						},
+						success: function (data) {
+								if (data['flag']) {
+										let classBt
+										let textBt
+										for (let key in data) {
+												if (data[key]['follow']){
+                           	classBt = 'bt-like'
+														textBt = 'Unfollow'
+                        }
+												else {
+														classBt = 'bt-like follow'
+														textBt = 'Follow'
+                        }
+												if (key !== 'flag'){
+													container.append(
+													'               <div class="ct-user">\n' +
+													'                    <div class="img-user-ct">\n' +
+													'                        <div>\n' +
+													'                            <img src="' + data[key]['avatar'] + '" alt="" class="">\n' +
+													'                        </div>\n' +
+													'                    </div>\n' +
+													'                    <div class="links-user">\n' +
+													'                        <span class="user-name">@' + key + '</span>\n' +
+													'                        <span>smndm skdk skdjkf</span>\n' +
+													'                        <ul class="links">\n' +
+													'                            <li><a href=""><i class="ri-instagram-line"></i></a></li>\n' +
+													'                            <li><a href=""><i class="ri-facebook-circle-line"></i></a></li>\n' +
+													'                            <li><a href=""><i class="ri-twitter-line"></i></a></li>\n' +
+													'                            <li><a href=""><i class="ri-earth-line"></i></a></li>\n' +
+													'                        </ul>\n' +
+													'                    </div>\n' +
+													'                    <div class="ct-bts-user">\n' +
+													'                         <button class="'+ classBt +'" type="submit" data-value="' + data[key]['slug'] + '">' + textBt + '</button>\n' +
+													'                         <button>Ignore</button>\n' +
+													'                     </div>\n' +
+													'                </div>'
+													)
+												}
+
+										}
+										console.log(container.children().length)
+								}
+								else {
+										flagAjax = false
+								}
+						},
+						error: function(xhr, status, error) {
+								console.log(error);
+						}
+				})
+			}
+    }
+	});
+
+
+
+	</script>
+{% endblock %}

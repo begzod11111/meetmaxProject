@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}{% endblock %}</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{#        <script src="{% static 'js/loader.js' %}"></script>#}
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'css/loader.css' %}">
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+        {% block css %}
+        {% endblock %}
+    </head>
+    <body>
+        <div id="preloader" class="preloader" style="display: none">
+          <svg id="loader" class="pl2" viewBox="0 0 128 128" width="128px" height="128px" xmlns="http://www.w3.org/2000/svg">
+            <g fill="var(--primary)">
+                <g class="pl2__rect-g">
+                    <rect class="pl2__rect" rx="8" ry="8" x="0" y="128" width="40" height="24" transform="rotate(180)" />
+                </g>
+                <g class="pl2__rect-g">
+                    <rect class="pl2__rect" rx="8" ry="8" x="44" y="128" width="40" height="24" transform="rotate(180)" />
+                </g>
+                <g class="pl2__rect-g">
+                    <rect class="pl2__rect" rx="8" ry="8" x="88" y="128" width="40" height="24" transform="rotate(180)" />
+                </g>
+            </g>
+            <g fill="hsl(283,90%,50%)" mask="url(#pl-mask)">
+                <g class="pl2__rect-g">
+                    <rect class="pl2__rect" rx="8" ry="8" x="0" y="128" width="40" height="24" transform="rotate(180)" />
+                </g>
+                <g class="pl2__rect-g">
+                    <rect class="pl2__rect" rx="8" ry="8" x="44" y="128" width="40" height="24" transform="rotate(180)" />
+                </g>
+                <g class="pl2__rect-g">
+                    <rect class="pl2__rect" rx="8" ry="8" x="88" y="128" width="40" height="24" transform="rotate(180)" />
+                </g>
+            </g>
+          </svg>
+        </div>
+        <div class="container">
+            <header>
+                <a href="#" class="logo"><i class="ri-messenger-fill"></i><span class="meet">Meet</span><span>max</span></a>
+                <div class="input-find">
+                    <button type="submit" ><i class="ri-search-line"></i></button>
+                    <input type="text" id="input-my">
+
+                </div>
+							{% if request.user.is_authenticated %}
+                <div class="profile_photo">
+                    <span>{{ user.username }}</span>
+                    <a href="#">
+                        <img src="{{ user.profile.avatar.url }}" alt="" class="media media-obj">
+                    </a>
+                </div>
+							{% endif %}
+            </header>
+            <div class="main-content">
+                <div class="nav-bar">
+                    <nav class="nav_box">
+                        <ul>
+                            <li class="list_item"><a href="{% url 'posts_list' %}"><i class="ri-home-4-line"></i><span>Feed</span></a></li>
+                            <li class="list_item"><a href="{% if user.is_authenticated %}{% url 'accounts:user-community' following_or_followers='following' user_slug=user.profile.slug %}{% else %}{% url 'accounts:sing_in' %}{% endif %}"><i class="ri-group-line"></i><span>My community</span></a></li>
+                            <li class="list_item"><a href="{% if user.is_authenticated %}{% url 'chats:dialogs' %}{% else %}{% url 'accounts:sing_in' %}{% endif %}"><i class="ri-message-3-line"></i><span>Messages</span></a></li>
+                            <li class="list_item"><a href="#"><i class="ri-notification-3-line"></i><span>Notification</span></a></li>
+                            <li class="list_item"><a href="{% url 'article:article_list' %}"><i class="ri-global-line"></i><span>Explore</span></a></li>
+                            <li class="list_item"><a href="{% if user.is_authenticated %}{% url 'accounts:user-profile' user.profile.slug %}{% else %}{% url 'accounts:sing_in' %}{% endif %}"><i class="ri-user-line"></i><span>Profile</span></a></li>
+                            <li class="list_item"><a href="{% if user.is_authenticated %}{% url 'accounts:user-settings' user.profile.slug %}{% else %}{% url 'accounts:sing_in' %}{% endif %}"><i class="ri-settings-5-line"></i><span>Settings</span></a></li>
+													{% if user.is_authenticated %}
+                            <li class="list_item"><a href="{% url 'accounts:logout' user.profile.slug %}"><i class="ri-logout-circle-r-line"></i><span>Logout</span></a></li>
+													{% else %}
+														<li class="list_item"><a href="{% url 'accounts:sing_in' %}"><i class="ri-login-circle-line"></i><span>Login</span></a></li>
+													{% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+<script>
+		let csrf = '{{ csrf_token }}'
+
+	$('.like-add-bt').click(function () {
+    let id = String($(this).attr('id'))
+    $.ajax({
+        url: '{% url 'add_like_post' %}',
+        type: "POST",
+				headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+        dataType: 'json',
+        data: {
+					'post_id': id
+        },
+        success: function (data) {
+            let i = $("#" + id + ' i')
+            let countSpan = $('#count-post-' + id)
+            countSpan.text(data['count_likes'] + ' Likes')
+            if (data['liked']) {
+                i.before('<i class="ri-heart-2-fill"></i>')
+                i.remove()
+            }
+            else {
+                i.before('<i class="ri-heart-2-line"></i>')
+                i.remove()
+
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log(error);
+        }
+    });
+	});
+
+
+</script>
+				<script src="{% static 'js/script.js' %}"></script>
+        <script src="{% static 'js/ajax.js' %}"></script>
+        {% block js %}
+        {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,26 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'accounts/css/sing_in.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="w-80-ct">
+        <div class="form-ct">
+            <form method="post" action="{% url 'accounts:sing_in' %}" class="active-form" id="sing-in-form">{% csrf_token %}
+                <a class="meetmax-logo"><i class="ri-messenger-fill"></i><span class="meet">Meet</span><span>max</span></a>
+                {% if form.errors %}<p>{{ form.errors }}</p>{% endif %}
+                <div class="form-input"><i class="ri-at-line"></i>{{ form.username }}</div>
+                <div class="form-password"><i class="ri-key-line"></i>{{ form.password }}</div>
+                <a href="{% url 'accounts:sing_up' %}">Sing up</a>
+                <a href="{% url 'accounts:password-reset' %}" >Forget your password?</a>
+                <button type="submit">Sing in</button>
+            </form>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'chats/css/chat.css' %}">
+{% endblock %}
+
+{% block content %}
+
+	<div class="main-ct">
+                <div class="chats-list-user">
+                    <form class="search" method="post">
+                        <input type="text">
+                        <button type="submit"><i class="ri-search-line"></i></button>
+                    </form>
+                    <ul>
+											{% for i in dialogs_list %}
+                        <li>
+                            <a href="{{ i.absolute_url }}">
+                                <div class="profile-photo">
+                                    <img src="{{ i.user_2.avatar.url }}" alt="" class="media">
+                                </div>
+                                <div class="name-user">
+                                    <span class="username-chat">{{ i.user_2.user.username }}</span><br>
+                                    <span>Akdjf dkjf dkkdf dkfjkdj dkfj...</span>
+                                </div>
+                                <div class="time">
+                                    <span>12.23 am</span><br>
+                                    <span class="new-messages">1</span>
+                                </div>
+                            </a>
+                        </li>
+											{% endfor %}
+                    </ul>
+                </div>
+							{% if dialog %}
+								{% include 'chats/personal_chat.html' %}
+							{% endif %}
+            </div>
+{% endblock %}

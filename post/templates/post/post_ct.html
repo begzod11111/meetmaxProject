@@ -1,0 +1,93 @@
+<div class="posts-ct">
+		<form class="modal-window" id="m{{ i.pk }}" method="post" action="{% url 'delete_post' post_id=i.pk %}">{% csrf_token %}
+				<button><i class="ri-eye-off-line"></i><span>Hide Post</span></button>
+				<button><i class="ri-notification-3-line"></i><span>Turn on notification this post</span></button>
+				<button type="submit"><i class="ri-feedback-line"></i><span>Delete</span></button>
+				<button><i class="ri-user-unfollow-line"></i><span>Unfollow</span></button>
+		</form>
+		<div class="post-header">
+				<div class="profile-photo">
+						<img src="{{ i.author.avatar.url }}" alt="" class="media-obj">
+				</div>
+				<div class="meta">
+						<span class="name">@{{ i.author.user.username }}</span>
+						<span>{{ i.publish_date }}</span>
+				</div>
+				<button id="open-window" onclick="modalOpen({{ i.pk }})" type="button"><i class="ri-more-fill"></i></button>
+		</div>
+		{% if i.descriptions %}
+				<div class="description">
+						<span>{{ i.descriptions }}</span>
+				</div>
+		{% endif %}
+		{% if i.media %}
+				<div class="content-post">
+						<div class="media-ct">
+								<img class="media media-obj" src="{{ i.media.url }}" alt="">
+						</div>
+				</div>
+		{% endif %}
+		{% if i.file %}
+				<a href="{{ i.post.file.url }}">{{ i.post.file.name }}</a>
+		{% endif %}
+		<div class="post-footer">
+				<div class="info-post">
+				{% with user_likes=i.likes.all %}
+						<div class="liked-user">
+								{% if user_likes %}
+										{% for like in user_likes %}
+												<a href="">
+														<div class="profile-photo">
+																<img src="{{ like.profile.avatar.url }}" alt="">
+														</div>
+												</a>
+										{% endfor %}
+								{% endif %}
+						</div>
+						<div>
+								<span id="comment-{{ i.pk }}">{{ i.comments.all.count }} Comments</span>
+								<span id="count-post-{{ i.pk }}">{{ user_likes.count }} Likes</span>
+						</div>
+				</div>
+				<div class="post-fun">
+						<button id="{{ i.post.id }}" class="like-add-bt"><i class="{% if user in user_likes %}ri-heart-2-fill{% else %}ri-heart-2-line{% endif %}"></i></button>
+						<a href=""><i class="ri-chat-1-line"></i></a>
+						<a href=""><i class="ri-share-forward-line"></i></a>
+				</div>
+				{% endwith %}
+				<form action="" class="comment-add" method="post" autocomplete="off">{% csrf_token %}
+					<input type="hidden" data-value="{{ i.pk }}" id="post_id">
+						<div class="profile-photo">
+								<img src="{{ profile.avatar.url }}" alt="err"></div>
+						<div class="input-text-comment">
+								<input type="text" id="text">
+								<button><i class="ri-file-gif-line"></i></button>
+								<button><i class="ri-image-line"></i></button>
+								<button class="add-comment-bt"><i class="ri-user-smile-line"></i></button>
+						</div>
+						<div class="send-ct">
+								<button class="send" type="submit"><i class="ri-send-plane-2-line"></i></button>
+						</div>
+				</form>
+		</div>
+		<div class="comment-ct-post">
+				<ul id="ct-{{ i.pk }}">
+						{% for c in i.comments.all %}
+								<li class="comment-li">
+										<div class="ct_likes_bar">
+												<button class="like_bt_comment" id="like" data-value="{{ c.pk }}"><i class="ri-arrow-drop-up-line"></i></button><span id="count-like-{{ c.pk }}">{{ c.count_likes }}</span><button class="like_bt_comment" id="dislike" data-value="{{ c.pk }}"><i class="ri-arrow-drop-down-line"></i></button>
+										</div>
+										<div class="meta_com_data">
+												<div class="profile-photo">
+														<img src="{{ c.user.profile.avatar.url }}" alt="" class="media media-obj">
+												</div>
+										</div>
+										<div class="content-ct-comment">
+												<a href="">@{{ c.user.username }}</a>
+												<span class="content-comment">{{ c.content }}</span>
+										</div>
+								</li>
+						{% endfor %}
+				</ul>
+		</div>
+</div>

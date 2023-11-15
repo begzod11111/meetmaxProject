@@ -1,0 +1,77 @@
+{% extends 'main/base.html' %}
+
+{% load static %}
+
+{% block css %}
+	<link rel="stylesheet" href="{% static 'accounts/css/sing_in.css' %}">
+	<style>
+		.form-ct form #social {
+				padding: 5px;
+				display: flex;
+		}
+		.form-ct form #social i {
+				padding: 5px;
+				font-weight: bold;
+				border-radius: 10px;
+				font-size: 20px;
+				position: static;
+				margin: 0 10px;
+		}
+	</style>
+{% endblock %}
+
+{% block content %}
+				<div class="w-80-ct">
+						<div class="form-ct">
+								<form method="post" action="" class="active-form" id="sing-in-form">{% csrf_token %}
+										<a class="meetmax-logo"><i class="ri-messenger-fill"></i><span class="meet">Meet</span><span>max</span></a>
+
+										<div class="form-input"><i class="ri-at-line"></i>{{ form.username }}</div>
+										<div class="form-input"><i class="ri-at-line"></i>{{ form.email }}</div>
+										{% for i in form %}
+											{% if i != form.username and i != form.email %}
+												<div class="form-password"><i class="ri-key-line"></i>{{ i }}</div>
+											{% endif %}
+										{% endfor %}
+										<div id="social">
+											<a href="{% url "social:begin" "google-oauth2" %}"><i class="ri-google-line"></i></a>
+											<a href="{% url "social:begin" "facebook" %}"><i class="ri-twitter-line"></i></a>
+											<a href="{% url "social:begin" "twitter" %}"><i class="ri-facebook-line"></i></a>
+										</div>
+										<button type="submit">Sing up</button>
+								</form>
+
+						</div>
+				</div>
+{% endblock %}
+
+{% block js %}
+<script>
+let spanText = $('#span_input')
+$('input#username').on('keyup', function () {
+		let username = $(this).val()
+		if (username.length < 5) {
+				spanText.text('Меньше чем 8')
+		}
+		else {
+				$.ajax({
+					url: '{% url 'accounts:check_username' %}',
+					type: 'GET',
+					dataType: 'json',
+					data: {
+							'username': username
+					},
+					success: function (data) {
+							if (data['is_taken']){
+									spanText.text('Занято')
+							}
+							else {
+									spanText.text('Свободно')
+							}
+					}
+				})
+		}
+
+})
+</script>
+{% endblock %}

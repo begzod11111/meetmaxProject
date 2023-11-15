@@ -1,0 +1,172 @@
+
+.profile-ct {
+    margin: 0 10px 10px 0;
+    order: 2;
+    height: 100%;
+    width: 80%;
+    overflow: auto;
+}
+
+
+.profile-ct::-webkit-scrollbar {
+    width: 0;
+}
+
+.profile-ct .banner-ct {
+    position: relative;
+    border-radius: 20px 20px 0 0 ;
+    width: 100%;
+    height: 70%;
+}
+
+
+.header-profile {
+    width: 100%;
+    height: 90%;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+
+.custom-file-upload {
+    justify-content: center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.header-profile .banner-ct .custom-file-upload {
+    border-radius: 10px;
+    background: #fdf9f9;
+    position: absolute;
+    height: 35px;
+    width: 18%;
+    right: 5%;
+    bottom: 5%;
+    z-index: 9;
+
+}
+
+.custom-file-upload i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+
+.header-profile .user-main-photo {
+    border: 5px white solid;
+    left: 5%;
+    top: -150px;
+    border-radius: 50%;
+    z-index: 19;
+    width: 200px;
+    height: 200px;
+    position: absolute;
+}
+
+
+.footer-banner {
+    position: relative;
+    height: 30%;
+    width: 100%;
+}
+
+.header-profile .custom-file-upload {
+    border-radius: 50%;
+    background: #ebeaea;
+    height: 30px;
+    width: 30px;
+    z-index: 20;
+    position: absolute;
+    bottom: 80%;
+    right: 78%;
+
+}
+
+.header-profile .footer-banner .custom-file-upload i {
+    margin: 0;
+}
+
+.footer-banner .meta-user .user-name {
+    font-size: 30px;
+
+}
+
+.meta-user {
+    position: absolute;
+    left: 5%;
+    padding: 50px 10px 10px 10px;
+    height: 100%;
+}
+
+
+.profile {
+    background: #ebeaea;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+}
+.info-user {
+    padding: 20px 10px 20px 20px;
+    position: relative;
+    order: 1;
+    height: 100%;
+    width: 25%;
+}
+
+.my_posts {
+    overflow: auto;
+    padding: 20px 20px 0 10px;
+    order: 2;
+    width: 75%;
+    height: 100%;
+}
+
+.intro-user {
+    padding: 20px;
+    width: 100%;
+    border-radius: 20px;
+    background: white;
+}
+
+
+.intro {
+    align-items: center;
+    display: flex;
+    width: 90%;
+    height: 10%;
+}
+
+
+
+.intro-user ul li {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px 5px 0;
+    width: 100%;
+    /*height: 10%;*/
+}
+
+.intro-user ul li i {
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.intro-user ul li span {
+    font-size: 15px;
+}
+
+.intro-user .edit-details {
+    color: black;
+    border-radius: 10px;
+    margin: 20px auto 0 auto;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    height: 30px;
+    width: 90%;
+    background: #eee0e0;
+}

@@ -1,0 +1,247 @@
+.post-detail-ct {
+    height: 100%;
+    order: 2;
+    width: 79%;
+    background: #cccccc;
+    padding: 20px 20px 0 20px;
+    border-radius: 20px;
+}
+
+.post-ct {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    background: white;
+
+}
+
+.header-post-detail {
+    height: 10%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.header-post-detail h3 {
+    margin: 20px;
+}
+
+.post-detail {
+    position: relative;
+    order: 1;
+    height: 100%;
+    width: 75%;
+    overflow: auto;
+    padding: 0 5%;
+}
+.post-detail::-webkit-scrollbar {
+    height: 100%;
+    width: 6px;
+}
+
+
+
+.post-detail::-webkit-scrollbar-thumb {
+    background: #546179;
+    border-radius: 20px;
+    transition: all 1s ease-in-out;
+}
+
+.post-detail::-webkit-scrollbar-thumb:hover {
+    background: #4475d3;
+}
+
+
+.post-detail .post-photo {
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+    height: 300px;
+    width: 100%;
+    background: #546179;
+}
+
+.post-detail .post-photo img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.add-comment {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    width: 100%;
+    height: 50px;
+}
+
+.add-comment input {
+    margin-left: 10px;
+    height: 30px;
+    width: 70%;
+    display: block;
+    border-radius: 8px;
+    border: 1px black solid;
+
+}
+
+
+
+.add-comment button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30px;
+    width: 15%;
+    margin-left: 10px;
+    border-radius: 10px;
+    background: aqua;
+}
+
+.post-detail h3 {
+    font-size: 24px;
+    margin: 20px 0;
+}
+
+.auther-post {
+    border-left: black 1px solid;
+    padding-bottom: 20px;
+    order: 2;
+    height: 100%;
+    width: 25%;
+
+}
+
+.ct-post {
+    padding-bottom: 20px;
+    height: 90%;
+    width: 100%;
+    display: flex;
+}
+
+.comment-ct {
+    width: 100%;
+    display: flex;
+}
+
+.user-ava {
+    width: 10%;
+}
+
+.comments-ct {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+
+.comment-text {
+    width: 90%;
+    height: 100%;
+}
+
+.comment-text .user-name {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+}
+
+.comment-text .user-name span {
+    margin-left: 10px;
+    font-size: 10px;
+}
+
+.comment-fun {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+}
+
+
+.comment-fun span {
+    position: absolute;
+}
+
+.comment-fun i {
+    margin-left: 25px;
+    font-size: 25px;
+}
+
+.auther-profile {
+    padding: 10px;
+    height: 250px;
+    width: 100%;
+}
+
+.comment-ct .comment-fun button {
+    margin: 0;
+}
+
+.auther-mini-profile .profile-photo {
+    margin: 0;
+}
+
+.auther-profile a {
+    padding: 5px;
+    display: block;
+}
+
+.auther-profile a .auther-name{
+    font-size: 20px;
+    color: black;
+}
+
+.auther-profile a span {
+    font-size: 13px;
+}
+
+.auther-profile li {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.auther-profile span, i {
+    margin-left: 10px;
+    font-size: 17px;
+
+}
+
+.bts button i {
+    margin: 0;
+}
+
+.bts .interested i {
+    margin-right: 10px;
+}
+
+.interested {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #8d7e7e;
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin-right: 15px;
+}
+
+.bts button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #8d7e7e;
+    padding: 5px 10px;
+    border-radius: 10px;
+}
+
+.ct_likes_bar .like_bt_comment i {
+    margin: 0;
+}
+
+.ct_likes_bar span {
+    position: static;
+}

@@ -1,0 +1,84 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Posts{% endblock %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+				<div class="chats">
+            <form action="" method="get">
+                <button class="find-history-bt" type="submit"><i class="ri-search-line"></i></button>
+                <input type="text" placeholder="Search friends">
+            </form>
+            <div class="history-ct">
+                 <div class="scroll-container">
+                    <div class="history">
+                      <div class="person"></div>
+                      <div class="person"></div>                      <div class="person"></div>
+                      <div class="person"></div>
+                      <div class="person"></div>                      <div class="person"></div>
+                      <div class="person"></div>
+                      <div class="person"></div>
+                      <div class="person"></div>
+                      <div class="person"></div>
+                      <div class="person"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="chats-profile">
+                <a href="" class="profile">
+                    <div class="profile-photo">
+                        <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="">
+                    </div>
+                    <span class="user-name">Martin Bon</span><span>2min</span>
+                </a>
+                                <a href="" class="profile">
+                    <div class="profile-photo">
+                        <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="">
+                    </div>
+                    <span class="user-name">Martin Bon</span><span>2min</span>
+                </a>
+                                <a href="" class="profile">
+                    <div class="profile-photo">
+                        <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="">
+                    </div>
+                    <span class="user-name">Martin Bon</span><span>2min</span>
+                </a>
+                <a href="" class="profile">
+                    <div class="profile-photo">
+                        <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="">
+                    </div>
+                    <span class="user-name">Martin Bon</span><span>2min</span>
+                </a>
+            </div>
+        </div>
+        <div class="content" id="content">
+            <div class="add-post-ct">
+                <form class="post_form" action="{% url 'add_post' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <div>
+                        <div class="photo-user">
+                            <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="">
+                        </div>
+                        {{ form_post.descriptions }}
+                    </div>
+                    <div class="post-bt-ct">
+                        <label id="{{ form_post.file.id_for_label }}"><i class="ri-file-line"></i>{{ form_post.file }} File</label>
+                        <label id="{{ form_post.media.id_for_label }}"><i class="ri-image-line"></i>{{ form_post.media }} Photo/Video</label>
+                        <button><i class="ri-user-smile-line"></i> Falling</button>
+                        <button type="submit" class="bt-add-post">Post</button>
+                    </div>
+                </form>
+            </div>
+
+            {% for i in all_posts %}
+                {% include 'post/post_ct.html' %}
+            {% endfor %}
+        </div>
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}

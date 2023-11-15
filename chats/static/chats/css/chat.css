@@ -1,0 +1,265 @@
+.main-ct {
+    height: 100%;
+    display: flex;
+    position: relative;
+    margin-right: 20px;
+    width: calc(80% - 20px);
+    background: linear-gradient(90deg, #b9deed, #efefef);
+    order: 2;
+    padding: 20px 20px 0 20px;
+    border-radius: 20px 20px 0 0;
+
+}
+
+.chats-list-user {
+    overflow: auto;
+    height: 100%;
+    padding: 15px 10px;
+    width: calc(33% - 20px);
+    margin-right: 20px;
+    background: #ffffff;
+    border-radius: 20px 20px 0 0 ;
+}
+
+.chats-list-user::-webkit-scrollbar {
+    display: none;
+}
+
+.search {
+    align-items: center;
+    display: flex;
+    height: 40px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.search input {
+    padding: 10px;
+    border-radius: 10px;
+    height: 70%;
+    width: 80%;
+    border: 1px solid black;
+}
+
+.search button {
+    color: #ebeaea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin-left: 5%;
+    background: #4475d3;
+    width: 15%;
+    height: 75%;
+}
+
+.chats-list-user ul li a {
+    height: 70px;
+    align-items: center;
+    width: 100%;
+    display: flex;
+    border-radius: 10px;
+    transition: all .2s step-start;
+
+}
+
+.chats-list-user ul li a:hover {
+    background: rgba(109, 93, 252, 0.65);
+}
+
+.name-user {
+    margin-left: 10px;
+    height: 85%;
+    width: 60%;
+
+}
+
+.name-user span {
+    color: #0c0000;
+    font-size: 12px;
+}
+
+
+.name-user .username-chat {
+    font-size: 20px;
+}
+
+.time {
+    position: relative;
+    font-size: 12px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    width: 20%;
+}
+
+.new-messages {
+    color: #ebeaea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 5%;
+    padding: 2px 10px;
+    background: #cc5050;
+}
+
+.chat-one-to-one {
+    padding: 10px 10px 0 10px;
+    border-radius: 20px 20px 0 0;
+    width: calc(100% - 33%);
+    height: 100%;
+    background: #ffffff;
+}
+
+.chat-one-to-one .chat-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 70px;
+    width: 100%;
+    border-bottom: 1px solid black;
+}
+
+.meta-chat {
+    margin-left: 2%;
+    width: 30%;
+    height: 80%;
+}
+
+.meta-chat span {
+    align-items: center;
+    display: flex;
+    width: 100%;
+    height: 50%;
+    font-size: 12px;
+}
+
+.meta-chat span i {
+    margin: 5px;
+    border-radius: 50%;
+    display: block;
+    background: #00ff52;
+    height: 10px;
+    width: 10px;
+}
+
+
+.chat-header .icon-fun {
+    display: flex;
+    position: absolute;
+    right: 0;
+    height: 30px;
+
+}
+
+.chat-header .icon-fun i {
+    margin: 5px;
+    font-size: 20px;
+}
+
+.chat {
+    position: relative;
+    height: calc(90% - 85px);
+    overflow: auto;
+}
+
+.chat::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.chat::-webkit-scrollbar {
+    display: none;
+    width: 20px;
+}
+
+.message-me {
+    width: 100%;
+}
+
+.message {
+    position: relative;
+    max-width: 80%;
+    display: flex;
+    margin-bottom: 5%;
+}
+
+.my-message {
+    float: right;
+}
+
+.us-ct02 {
+    display: flex;
+    justify-content: right;
+
+}
+
+.message-me .us-ct02 {
+    order: 1;
+}
+
+.my-message .us-ct02 {
+    order: 3;
+}
+
+.fun-message {
+    display: flex;
+    align-items: center;
+
+}
+
+.message-me .fun-message {
+    order: 3;
+}
+
+.my-message .fun-message {
+    order: 1;
+}
+
+.fun-message button {
+    font-size: 20px;
+    padding: 0 10px;
+}
+
+.us-ct02 .fix-photo {
+    margin: 0 5px;
+    width: 40px;
+    height: 40px;
+    border: 2px solid #4475d3;
+
+}
+
+.message-me .us-ct02 .profile_photo {
+    margin-right: 0;
+}
+
+.text-message {
+    order: 2;
+    display: flex;
+    padding: 10px;
+
+
+}
+
+.my-message .text-message {
+    border-radius: 10px 0 10px 10px;
+    background: #e8dada;
+    color: #000000;
+}
+
+.message-me .text-message {
+    background: #6d5dfc;
+    color: #ebeaea;
+    border-radius: 0 10px 10px 10px;
+}
+
+.chat h3 {
+    margin: 10px 0;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}

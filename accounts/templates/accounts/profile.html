@@ -1,0 +1,87 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Profile {{ user.username }}{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'accounts/css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+        <div class="profile-ct">
+            <div class="header-profile">
+                <div class="media-ct banner-ct">
+                        <label for="banner-photo" class="custom-file-upload">
+                            <i class="ri-upload-cloud-2-line"></i>
+                            Edit Cover Photo
+                        </label>
+                        <input id="banner-photo" type="file"/>
+                    <img class="media" src="{{ user.profile.banner.url }}" alt="">
+                </div>
+                <div class="footer-banner">
+                    <div class="media-ct user-main-photo">
+                        <img  src="{{ user.profile.avatar.url }}" alt="" class="">
+                    </div>
+
+                    <label for="user-photo" class="custom-file-upload">
+                        <i class="ri-upload-cloud-2-line"></i>
+                    </label>
+                    <input id="user-photo" type="file"/>
+                    <div class="meta-user">
+
+                        <span class="user-name">@{{ user.username }}</span><br>
+                        <span>{{ user.profile.bio }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile">
+                <div class="info-user">
+                    <div class="intro-user">
+                        <span class="intro">INTRO</span>
+                        <ul>
+
+                            <li><i class="ri-earth-line"></i><span>uihut.com</span></li>
+                            <li><i class="ri-user-line"></i><span>Male</span></li>
+                            <li><i class="ri-cake-2-line"></i><span>Born June 18,2000</span></li>
+                            <li><i class="ri-map-pin-user-line"></i><span>Shulhet, Bangladesh</span></li>
+                            <li><i class="ri-facebook-circle-line"></i><span>salehahmed</span></li>
+                            <li><i class="ri-twitter-line"></i><span>salehahmed</span></li>
+                            <li><i class="ri-instagram-line"></i><span>saleh_ahmed</span></li>
+                        </ul>
+                        <span> Followers</span>
+                        <br>
+                        <span> Following</span>
+                        <a href="{{ user.profile.get_absolute_url_settings }}" class="edit-details">Edit Details</a>
+                    </div>
+                </div>
+                <div class="my_posts">
+                <div class="add-post-ct">
+                <form class="post_form" action="{% url 'add_post' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <div>
+                        <div class="photo-user">
+                            <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="">
+                        </div>
+                        {{ form_post.descriptions }}
+                    </div>
+                    <div class="post-bt-ct">
+                        <label id="{{ form_post.file.id_for_label }}"><i class="ri-file-line"></i>{{ form_post.file }} File</label>
+                        <label id="{{ form_post.media.id_for_label }}"><i class="ri-image-line"></i>{{ form_post.media }} Photo/Video</label>
+                        <button><i class="ri-user-smile-line"></i> Falling</button>
+                        <button type="submit" class="bt-add-post">Post</button>
+                    </div>
+
+                </form>
+            </div>
+                    {% for i in user_posts %}
+											 {% include 'post/post_ct.html' %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+{% endblock %}
+
+{% block js %}
+
+{% endblock %}
