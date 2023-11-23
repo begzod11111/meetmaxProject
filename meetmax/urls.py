@@ -10,8 +10,8 @@ urlpatterns = [
     path('comment/', include('comment.urls', namespace='comments')),
     path('social-auth/', include('social_django.urls', namespace='social')),
     path('article/', include('article.urls', namespace='article')),
-    path('chats/', include('chats.urls', namespace='chats')),
-    path('test_chat', include('test_chat.urls'))
+    path('chat/', include('chats.urls', namespace='chats')),
+
 ]
 if settings.DEBUG:
     import debug_toolbar

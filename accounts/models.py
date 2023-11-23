@@ -74,3 +74,10 @@ class Profile(models.Model):
     def get_following_count(self):
         count = self.following.count()
         return count
+
+    def get_files_name(self):
+        names = {
+            'avatar': self.avatar.name.split('/')[-1].split('.')[0],
+            'banner': self.banner.name.split('/')[-1].split('.')[0]
+        }
+        return names

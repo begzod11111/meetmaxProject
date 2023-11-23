@@ -8,15 +8,20 @@
 {% endblock %}
 
 {% block content %}
+		{% with user=current_user %}
         <div class="profile-ct">
             <div class="header-profile">
                 <div class="media-ct banner-ct">
-                        <label for="banner-photo" class="custom-file-upload">
-                            <i class="ri-upload-cloud-2-line"></i>
-                            Edit Cover Photo
-                        </label>
-                        <input id="banner-photo" type="file"/>
-                    <img class="media" src="{{ user.profile.banner.url }}" alt="">
+									<form method="post" id="form-banner" enctype="multipart/form-data">
+										<label for="banner-photo" class="custom-file-upload">
+												<i class="ri-upload-cloud-2-line"></i>
+												Edit Cover Photo
+										</label>
+										<input name="file" id="banner-photo" type="file"/>
+										<button type="submit" style="display: none" id="bt-form-banner"></button>
+									</form>
+
+                    <img id="bannet" class="media" src="{{ user.profile.banner.url }}" alt="">
                 </div>
                 <div class="footer-banner">
                     <div class="media-ct user-main-photo">
@@ -43,45 +48,75 @@
 
                             <li><i class="ri-earth-line"></i><span>uihut.com</span></li>
                             <li><i class="ri-user-line"></i><span>Male</span></li>
-                            <li><i class="ri-cake-2-line"></i><span>Born June 18,2000</span></li>
+                            <li><i class="ri-cake-2-line"></i><span>{{ user.profile.birthday }}</span></li>
                             <li><i class="ri-map-pin-user-line"></i><span>Shulhet, Bangladesh</span></li>
                             <li><i class="ri-facebook-circle-line"></i><span>salehahmed</span></li>
                             <li><i class="ri-twitter-line"></i><span>salehahmed</span></li>
                             <li><i class="ri-instagram-line"></i><span>saleh_ahmed</span></li>
                         </ul>
-                        <span> Followers</span>
+                        <span>{{ user.followers }} Followers</span>
                         <br>
-                        <span> Following</span>
-                        <a href="{{ user.profile.get_absolute_url_settings }}" class="edit-details">Edit Details</a>
+                        <span>{{ user.following }} Following</span>
+												{% if not guest %}
+                        	<a href="{{ user.profile.get_absolute_url_settings }}" class="edit-details">Edit Details</a>
+												{% endif %}
                     </div>
                 </div>
-                <div class="my_posts">
-                <div class="add-post-ct">
-                <form class="post_form" action="{% url 'add_post' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
-                    <div>
-                        <div class="photo-user">
-                            <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="">
-                        </div>
-                        {{ form_post.descriptions }}
-                    </div>
-                    <div class="post-bt-ct">
-                        <label id="{{ form_post.file.id_for_label }}"><i class="ri-file-line"></i>{{ form_post.file }} File</label>
-                        <label id="{{ form_post.media.id_for_label }}"><i class="ri-image-line"></i>{{ form_post.media }} Photo/Video</label>
-                        <button><i class="ri-user-smile-line"></i> Falling</button>
-                        <button type="submit" class="bt-add-post">Post</button>
-                    </div>
 
-                </form>
-            </div>
+                <div class="my_posts">
+									{% if form_post %}
+										<div class="add-post-ct">
+											<form class="post_form" action="{% url 'add_post' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+													<div>
+															<div class="photo-user">
+																	<img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="">
+															</div>
+															{{ form_post.descriptions }}
+													</div>
+													<div class="post-bt-ct">
+															<label id="{{ form_post.file.id_for_label }}"><i class="ri-file-line"></i>{{ form_post.file }} File</label>
+															<label id="{{ form_post.media.id_for_label }}"><i class="ri-image-line"></i>{{ form_post.media }} Photo/Video</label>
+															<button><i class="ri-user-smile-line"></i> Falling</button>
+															<button type="submit" class="bt-add-post">Post</button>
+													</div>
+											</form>
+										</div>
+									{% endif %}
                     {% for i in user_posts %}
 											 {% include 'post/post_ct.html' %}
                     {% endfor %}
                 </div>
             </div>
         </div>
+		{% endwith %}
 
 {% endblock %}
 
 {% block js %}
+	<script>
+		$('#banner-photo').change(function () {
+				$('#bt-form-banner').click()
+		});
 
+		$('#form-banner').submit(function (e) {
+				e.preventDefault();
+				let formData = new FormData($(this)[0])
+				$.ajax({
+						url: "{% url 'accounts:user-update-banner' user.profile.slug %}",
+						dataType: 'json',
+						headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+						method: 'POST',
+						data: formData,
+						contentType: false,
+						processData: false,
+						success: function (data) {
+								console.log(data['path'])
+								$('#bannet').attr('src', data['path'])
+						},
+						error: function(xhr, status, error) {
+						console.log(error);
+						}
+				})
+		})
+	</script>
 {% endblock %}

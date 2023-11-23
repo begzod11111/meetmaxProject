@@ -62,3 +62,5 @@ $('.comment-add').on('submit', function (e) {
         }
     })
 })
+
+

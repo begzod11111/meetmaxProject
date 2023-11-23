@@ -12,8 +12,8 @@
 	{% load user_tags %}
     <div class="w-80-ct">
         <div class="tabs-menu-ct">
-            <button class="{% if nav == 1 %}activ{% endif %}" type="submit"><a href="{% url 'accounts:user-community' following_or_followers='following' user_slug=user.profile.slug %}">{{ user.profile.following.all.count }} Following</a></button>
-            <button class="{% if nav == 2 %}activ{% endif %}" type="submit"><a href="{% url 'accounts:user-community' following_or_followers='followers' user_slug=user.profile.slug %}">{{ user.profile.get_followers_count }} Followers</a></button>
+            <button class="{% if nav == 1 %}activ{% endif %}" type="submit"><a href="{% url 'accounts:user-community' following_or_followers='following' %}">{{ user.profile.following.all.count }} Following</a></button>
+            <button class="{% if nav == 2 %}activ{% endif %}" type="submit"><a href="{% url 'accounts:user-community' following_or_followers='followers' %}">{{ user.profile.get_followers_count }} Followers</a></button>
             <button class="{% if nav == 3 %}activ{% endif %}" type="submit"><a href="">People You Might Like</a></button>
         </div>
         <div class="list_user" id="container">
@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="links-user">
-                        <span class="user-name">@{{ i.user.username }}</span>
+                        <a href="{{ i.get_absolute_url_profile }}" class="user-name">@{{ i.user.username }}</a>
                         <span>{{ i.bio }}</span>
                         <ul class="links">
                             <li><a href=""><i class="ri-instagram-line"></i></a></li>
@@ -83,7 +83,7 @@
 	let page = 1
 	if (containerMain.children().length === 0){
         $.ajax({
-						url: "{% url 'accounts:user-community' following_or_followers='following' user_slug=user.profile.slug %}",
+						url: "{% url 'accounts:user-community' following_or_followers='following' %}",
 						dataType: 'json',
 						method: "GET",
 						data: {

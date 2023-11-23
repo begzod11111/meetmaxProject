@@ -3,10 +3,10 @@ from pathlib import Path
 
 from django.templatetags import static
 from django.urls import reverse, reverse_lazy
+from channels_redis.core import RedisChannelLayer
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -23,7 +23,8 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'mysite.com']
 # Application definition
 
 INSTALLED_APPS = [
-    'channels',
+    'daphne',
+    'test_chat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +40,7 @@ INSTALLED_APPS = [
     'social_django',
     'django_extensions',
     'debug_toolbar',
-    'test_chat'
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -71,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'meetmax.wsgi.application'
+ASGI_APPLICATION = 'meetmax.asgi.application'
 
 
 # Database
@@ -85,8 +86,15 @@ DATABASES = {
 }
 # Django channels
 ASGI_APPLICATION = 'meetmax.asgi.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
-CHANNEL_LAYERS = []
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -189,6 +197,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('posts_list')
 
+LOGIN_URL = reverse_lazy('accounts:sing_in')
 
 # debug_tool/settings.py
 

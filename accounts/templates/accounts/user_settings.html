@@ -76,7 +76,7 @@
                     <div class="tabs-ct" style="display: none">bloc</div>
                     <div class="tabs-ct" style="display: none">nitif</div>
                     <div class="tabs-ct" style="display: none">
-                        <form method="post" action="{% url 'accounts:user-change-password' user_slug=user.profile.slug %}">{% csrf_token %}
+                        <form method="post" action="{% url 'accounts:user-change-password' %}">{% csrf_token %}
 													{% for i in change_password_form %}
 															 <div class="input-item">
 																	 <label for="{{ i.id_for_label }}">{{ i.label }}</label>

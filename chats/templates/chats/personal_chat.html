@@ -1,4 +1,5 @@
 <div class="chat-one-to-one">
+	<input type="hidden" value="{{ dialog.name }}" id="room-name">
                     <div class="chat-header">
                         <div class="profile-photo">
                              <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="" class="media">
@@ -13,95 +14,86 @@
                             <button><i class="ri-error-warning-line"></i></button>
                         </div>
                     </div>
-                    <div class="chat">
+                    <div class="chat" id="chat-log">
                         <h3>13 Avgust, 2021</h3>
-                        <div class="message-me message">
-                            <div class="us-ct02">
-                                 <div class="profile-photo fix-photo">
-                                    <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="" class="media">
+												{% for message in dialog.messages.all %}
+													<div class="{% if message.author.id == user.profile.id %}my-message{% else %}message-me{% endif %} message">
+                                <div class="us-ct02">
+                                     <div class="profile-photo fix-photo">
+                                        <img src="{{ message.author.avatar.url }}" alt="" class="media">\n' +
+                                    </div>
                                 </div>
-                            </div>
 
-                            <span class="text-message">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</span>
-                            <div class="fun-message">
-                                <button><i class="ri-more-fill"></i></button>
-                            </div>
-                        </div>
-                        <div class="my-message message">
-                            <div class="us-ct02">
-                                 <div class="profile-photo fix-photo">
-                                    <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="" class="media">
+                                <span class="text-message">{{ message.message }}</span>
+                                <div class="fun-message">
+                                    <button><i class="ri-more-fill"></i></button>
                                 </div>
-                            </div>
+													</div>
 
-                            <span class="text-message">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</span>
-                            <div class="fun-message">
-                                <button><i class="ri-more-fill"></i></button>
-                            </div>
-                        </div>
-                        <div class="message-me message">
-                            <div class="us-ct02">
-                                 <div class="profile-photo fix-photo">
-                                    <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="" class="media">
-                                </div>
-                            </div>
-
-                            <span class="text-message">Lorem Ipsum is simply dummy text of the printing and typesetting industr to makeal in LIoforem Ipsum</span>
-                            <div class="fun-message">
-                                <button><i class="ri-more-fill"></i></button>
-                            </div>
-                        </div>
-                                                <div class="my-message message">
-                            <div class="us-ct02">
-                                 <div class="profile-photo fix-photo">
-                                    <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="" class="media">
-                                </div>
-                            </div>
-
-                            <span class="text-message">Lo of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type speth the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</span>
-                            <div class="fun-message">
-                                <button><i class="ri-more-fill"></i></button>
-                            </div>
-                        </div>
-                                                <div class="my-message message">
-                            <div class="us-ct02">
-                                 <div class="profile-photo fix-photo">
-                                    <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="" class="media">
-                                </div>
-                            </div>
-
-                            <span class="text-message">Lorem Ipsum is</span>
-                            <div class="fun-message">
-                                <button><i class="ri-more-fill"></i></button>
-                            </div>
-                        </div>
-                        <div class="message-me message">
-                            <div class="us-ct02">
-                                 <div class="profile-photo fix-photo">
-                                    <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="" class="media">
-                                </div>
-                            </div>
-
-                            <span class="text-message">Ipsum</span>
-                            <div class="fun-message">
-                                <button><i class="ri-more-fill"></i></button>
-                            </div>
-                        </div>
-
-
+												{% endfor %}
                     </div>
-                        <form action="" class="comment-add add-message">
+                        <div class=" comment-add add-message">
                             <div class="profile-photo"><img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt=""></div>
                             <div class="input-text-comment">
-                                <input type="text">
+                                <input type="text" id="chat-message-input">
                                 <button><i class="ri-file-gif-line"></i></button>
                                 <button><i class="ri-image-line"></i></button>
                                 <button><i class="ri-user-smile-line"></i></button>
                             </div>
                             <div class="send-ct">
-                                <button class="send"><i class="ri-send-plane-2-line"></i></button>
+                                <button class="send" id="chat-message-submit"><i class="ri-send-plane-2-line"></i></button>
                             </div>
-                        </form>
+                        </div>
                 </div>
-            </div>
-        </div>
+    <script>
+
+        const roomName = $('#room-name').attr('value');
+
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+
+            $('#chat-log').append(
+    '                        <div class="'+ data['class'] +' message">\n' +
+    '                            <div class="us-ct02">\n' +
+    '                                 <div class="profile-photo fix-photo">\n' +
+    '                                    <img src="'+ data['author_ava_url'] +'" alt="" class="media">\n' +
+    '                                </div>\n' +
+    '                            </div>\n' +
+    '\n' +
+    '                            <span class="text-message">'+ data['message'] +'</span>\n' +
+    '                            <div class="fun-message">\n' +
+    '                                <button><i class="ri-more-fill"></i></button>\n' +
+    '                            </div>\n' +
+    '                        </div>'
+)
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.key === 'Enter') {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        };
+    </script>

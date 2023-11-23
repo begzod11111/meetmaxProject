@@ -4,6 +4,5 @@ from .models import *
 
 
 admin.site.register(Message)
-admin.site.register(PrivateChat)
-admin.site.register(GroupChat)
+admin.site.register(Chat)
 

@@ -25,16 +25,16 @@ class PostsView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        context['form_post'] = PostForm
-
         context["all_posts"] = Post.optimization_objects.all()
         if request.user.is_authenticated:
+            context['form_post'] = PostForm
             context['user'] = User.objects.select_related('profile').only(
                 'profile__slug',
                 'profile__avatar',
                 'username',
                 'pk',
                 ).get(id=request.user.id)
+
         return self.render_to_response(context)
 
 

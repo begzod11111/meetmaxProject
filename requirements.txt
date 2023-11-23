@@ -1,6 +1,12 @@
 Django~=4.2.6
+Pillow~=10.1.0
 django-autoslug~=1.9.9
-requests~=2.28.1
+requests~=2.31.0
 django-debug-toolbar~=4.2.0
 social-auth-app-django==5.4.0
 channels~=4.0.0
+django-extensions~=3.2.3
+daphne~=4.0.0
+asgiref~=3.7.2
+asgi_redis~=1.4.3
+channels-redis~=4.1.0

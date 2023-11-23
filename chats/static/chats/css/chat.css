@@ -19,6 +19,7 @@
     margin-right: 20px;
     background: #ffffff;
     border-radius: 20px 20px 0 0 ;
+    position: relative;
 }
 
 .chats-list-user::-webkit-scrollbar {
@@ -189,8 +190,11 @@
 }
 
 .my-message {
+    margin-left: 75%;
     float: right;
+    text-align: right;
 }
+
 
 .us-ct02 {
     display: flex;
@@ -262,4 +266,16 @@
     display: flex;
     width: 100%;
     justify-content: center;
+}
+
+
+.add_chat {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+}
+
+.add_chat {
+    font-size: 20px;
 }

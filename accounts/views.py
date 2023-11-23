@@ -4,24 +4,22 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm, PasswordResetForm
-from django.contrib.auth.models import User
-from django.contrib.messages import get_messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage
-from django.db.models import Prefetch
-from django.http import JsonResponse, Http404, HttpRequest
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from django.template.loader import render_to_string
+from django.db.models import Prefetch, Count
+from django.http import JsonResponse, Http404
+from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView
 from django.views.generic.base import TemplateResponseMixin, TemplateView, ContextMixin
 from django.views.generic.edit import BaseFormView
 from post.forms import PostForm
 from post.models import Post
 from .forms import *
-from django.contrib.auth.views import LoginView
-from .mixins import BaseContextDataMixin
-from utils.mixins import JSONResponseMixin, JsonView
+from django.contrib.auth.views import LoginView, PasswordResetConfirmView
+from .mixins import BaseContextDataMixin, BaseSingInMixin
+from utils.mixins import JsonView
 
 
 # Create your views here.
@@ -63,22 +61,45 @@ class LoginUserView(LoginView):
 		return context
 
 
-def logout_user(request, user_slug):
+def logout_user(request):
 	logout(request)
 	return redirect('posts_list')
 
 
-class UserProfileView(TemplateResponseMixin, BaseContextDataMixin, View):
+class UserProfileView(BaseSingInMixin, TemplateView):
 	template_name = 'accounts/profile.html'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		try:
+			context['user'] = User.objects.select_related('profile').annotate(
+				following=Count('profile__following'),
+				followers=Count('profile__followers')
+			).get(id=self.request.user.id)
+		except User.DoesNotExist:
+			raise Http404
+
+		return context
 
 	def get(self, request, *args, **kwargs):
 		context = self.get_context_data(**kwargs)
-		context['form_post'] = PostForm()
-		context['user_posts'] = Post.optimization_objects.filter(author=context['user'].profile)
+		slug = context.get('user_slug')
+		if context['user'].profile.slug != slug:
+			context['current_user'] = User.objects.select_related('profile').annotate(
+				following=Count('profile__following'),
+				followers=Count('profile__followers')
+			).get(profile__slug=slug)
+			context['guest'] = True
+			context['user_posts'] = Post.optimization_objects.filter(author=context['current_user'].profile)
+		else:
+			context['current_user'] = context['user']
+			context['form_post'] = PostForm
+			context['guest'] = False
+			context['user_posts'] = Post.optimization_objects.filter(author=context['user'].profile)
 		return self.render_to_response(context)
 
 
-class UserSettingsView(TemplateResponseMixin, ContextMixin, View):
+class UserSettingsView(BaseSingInMixin, TemplateResponseMixin, ContextMixin, View):
 	template_name = 'accounts/user_settings.html'
 
 	def get(self, request, *args, **kwargs):
@@ -92,18 +113,19 @@ class UserSettingsView(TemplateResponseMixin, ContextMixin, View):
 
 
 class UserUpdateView(View, BaseContextDataMixin):
+
 	def post(self, request, *args, **kwargs):
 		context = super().get_context_data(**kwargs)
 		form = UserForm(request.POST, instance=context['user'])
 		profile_form = ProfileUserForm(request.POST, request.FILES, instance=context['user'].profile)
 		if request.FILES.get('avatar'):
 			url = context['user'].profile.avatar.path
-			if all(map(lambda x: True if x != 'default' else False, url.split("\\"))) and os.path.exists(url):
+			if context['user'].profile.get_files_name()['avatar'] != 'avatar_default':
 				os.remove(url)
 		if form.is_valid() and profile_form.is_valid():
 			form.save()
 			profile_form.save()
-			return redirect(context['user'].profile.get_absolute_url_settings())
+			return redirect(context['user'].profile.get_absolute_url_settings)
 		errors = {}
 		if form.errors:
 			errors.update(form.errors.get_json_data())
@@ -112,8 +134,7 @@ class UserUpdateView(View, BaseContextDataMixin):
 		for key, val in errors.items():
 			for error in val:
 				messages.add_message(request, messages.ERROR, f'{key} - {error["message"]}')
-
-		return redirect(context['user'].profile.get_absolute_url_settings())
+		return redirect(context['user'].profile.get_absolute_url_settings)
 
 
 class UserPasswordChange(BaseFormView):
@@ -190,7 +211,7 @@ class FollowUser(View, BaseContextDataMixin):
 		return JsonResponse(data)
 
 
-class ListCommunityView(TemplateView):
+class ListCommunityView(BaseSingInMixin, TemplateView):
 	available_slugs = ['followers', 'following', 'interesting-profile']
 	template_name = 'accounts/my_community.html'
 
@@ -222,7 +243,7 @@ class ListCommunityView(TemplateView):
 				'slug',
 				'bio'
 			))
-		).get(profile__slug=context['user_slug'])
+		).get(id=self.request.user.id)
 		context['objects'] = method(context['user'].profile).order_by('id')
 		return context
 
@@ -243,6 +264,7 @@ class ListCommunityView(TemplateView):
 			data['flag'] = False
 			return data
 
+	# @login_required(login_url='/accounts/sing-in/')
 	def get(self, request, *args, **kwargs):
 		context = self.get_context_data(**kwargs)
 		objects = context['objects']
@@ -254,4 +276,17 @@ class ListCommunityView(TemplateView):
 			data = self.get_json_data(context['user'], context['page'], page_num)
 			return JsonResponse(data)
 		return self.render_to_response(context)
+
+
+class UpdateBannerProfile(View):
+	def post(self, request, *args, **kwargs):
+		user_profile = Profile.objects.get(slug=kwargs['user_slug'])
+		if user_profile.get_files_name()['banner'] != 'banner_default':
+			os.remove(user_profile.banner.path)
+		user_profile.banner = request.FILES['file']
+		user_profile.save()
+		return JsonResponse({
+			'status': True,
+			'path': user_profile.banner.url
+		})
 

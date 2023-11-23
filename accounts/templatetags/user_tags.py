@@ -20,3 +20,8 @@ def check_liked(obj, user):
 	if user.profile in obj.rating.all():
 		return True
 	return False
+
+
+@register.filter(name='get_companion_user')
+def func(chat, user):
+	return chat.members.exclude(user=user)[0]

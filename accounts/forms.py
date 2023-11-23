@@ -45,7 +45,7 @@ class ProfileUserForm(forms.ModelForm):
         widgets = {
             'avatar': forms.FileInput(attrs={
             }),
-            'birthday': forms.DateInput()
+            'birthday': forms.DateInput(),
         }
 
     def clean_bio(self):

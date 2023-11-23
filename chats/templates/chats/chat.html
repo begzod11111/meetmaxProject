@@ -1,5 +1,6 @@
 {% extends 'main/base.html' %}
 {% load static %}
+{% load user_tags %}
 
 {% block css %}
 	<link rel="stylesheet" href="{% static 'chats/css/chat.css' %}">
@@ -9,19 +10,21 @@
 
 	<div class="main-ct">
                 <div class="chats-list-user">
-                    <form class="search" method="post">
-                        <input type="text">
-                        <button type="submit"><i class="ri-search-line"></i></button>
-                    </form>
+                    <div class="search">
+                        <input type="text" id="room-name-input">
+                        <button type="submit" id="room-name-submit"><i class="ri-search-line"></i></button>
+                    </div>
+									{% if dialogs_list.exists %}
                     <ul>
 											{% for i in dialogs_list %}
+												{% with user_2=i|get_companion_user:user %}
                         <li>
-                            <a href="{{ i.absolute_url }}">
+                            <a href="{{ i.get_absolute_url }}">
                                 <div class="profile-photo">
-                                    <img src="{{ i.user_2.avatar.url }}" alt="" class="media">
+                                    <img src="{{ user_2.avatar.url }}" alt="" class="media">
                                 </div>
                                 <div class="name-user">
-                                    <span class="username-chat">{{ i.user_2.user.username }}</span><br>
+                                    <span class="username-chat">{{ user_2.user.username }}</span><br>
                                     <span>Akdjf dkjf dkkdf dkfjkdj dkfj...</span>
                                 </div>
                                 <div class="time">
@@ -30,11 +33,31 @@
                                 </div>
                             </a>
                         </li>
+												{% endwith %}
 											{% endfor %}
-                    </ul>
+										</ul>
+									{% else %}
+										<a href="" class="add_chat"><i class="ri-add-line"></i>Add chat</a>
+									{% endif %}
                 </div>
 							{% if dialog %}
 								{% include 'chats/personal_chat.html' %}
 							{% endif %}
             </div>
+{% endblock %}
+
+{% block js %}
+	<script>
+		document.querySelector('#room-name-input').focus();
+		document.querySelector('#room-name-input').onkeyup = function(e) {
+				if (e.key === 'Enter') {  // enter, return
+						document.querySelector('#room-name-submit').click();
+				}
+		};
+
+		document.querySelector('#room-name-submit').onclick = function(e) {
+				let roomName = document.querySelector('#room-name-input').value;
+				window.location.pathname = '/chat/dialog/' + roomName + '/';
+		};
+	</script>
 {% endblock %}
