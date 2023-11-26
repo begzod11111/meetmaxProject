@@ -7,6 +7,7 @@
 		</form>
 		<div class="post-header">
 				<div class="profile-photo">
+
 						<img src="{{ i.author.avatar.url }}" alt="" class="media-obj">
 				</div>
 				<div class="meta">
@@ -28,7 +29,7 @@
 				</div>
 		{% endif %}
 		{% if i.file %}
-				<a href="{{ i.post.file.url }}">{{ i.post.file.name }}</a>
+				<a href="{{ i.file.url }}">{{ i.file }}</a>
 		{% endif %}
 		<div class="post-footer">
 				<div class="info-post">

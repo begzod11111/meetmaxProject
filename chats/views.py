@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
-from django.db.models import Prefetch, Q, F
+from django.db.models import Prefetch, Q, F, OuterRef, Subquery
 from django.shortcuts import render
 from django.urls import reverse
-from django.views.generic import TemplateView
-
+from django.views.generic import TemplateView, CreateView
+from .forms import ChatForm
 from accounts.models import Profile
 from chats.models import Chat, Message
 
@@ -21,36 +21,55 @@ class DialogsUserView(TemplateView):
 			'username',
 		).get(id=self.request.user.id)
 		if context.get('companion_slug'):
-			context['dialog'] = Chat.objects.prefetch_related(
-				Prefetch('members', queryset=Profile.objects.only(
-						'pk',
-						'avatar',
-					).all()
-				),
-				Prefetch(
-					'messages',
-					queryset=Message.objects.select_related('author', 'group').only(
-						'id',
-						'author__slug',
-						'author__avatar',
-						'message',
-						'group_id'
+			try:
+				context['dialog'] = Chat.objects.prefetch_related(
+					Prefetch('members', queryset=Profile.objects.select_related('user').only(
+							'pk',
+							'user__username',
+							'avatar',
+						).exclude(user=context['user'])
+					),
+					Prefetch(
+						'messages',
+						queryset=Message.objects.select_related('author').only(
+							'id',
+							'author__slug',
+							'author__avatar',
+							'message',
 
-					).all()
+						).all().order_by('pub_date')
+					)
+				).get(
+					name=context['companion_slug'],
+					type_chat="DCH",
+					members=context['user'].profile,
 				)
-			).get(
-				name=context['companion_slug'],
-				type_chat="DCH",
-				members=context['user'].profile,
-			)
+			except Chat.DoesNotExist:
+				print('error')
+		chats = Message.objects.filter(chat__id=OuterRef('pk')).order_by('-pub_date')
 		context['dialogs_list'] = Chat.objects.prefetch_related(
 			Prefetch(
 				'members', queryset=Profile.objects.select_related('user').only(
 					'avatar',
 					'user__username'
 				).exclude(user=context['user'])
-			)
+			),
+			Prefetch('messages', queryset=Message.objects.only(
+				'pk'
+			).filter(
+				is_readed=False).exclude(author__user=context['user']))
 		).only(
 			'name',
-		).filter(type_chat='DCH')
+			'type_chat',
+		).annotate(
+			last_message=Subquery(chats.values('message'))
+		).filter(type_chat='DCH', members=context['user'].profile)
+		context['chat_form'] = ChatForm()
 		return context
+
+
+# Message.objects.filter(
+# 				group_id=F('pk'),
+# 				is_readed=False
+# 			).exclude(author=context['user'].profile).count()
+

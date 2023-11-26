@@ -1,9 +1,12 @@
+{% load user_tags %}
+
 <div class="chat-one-to-one">
 	<input type="hidden" value="{{ dialog.name }}" id="room-name">
                     <div class="chat-header">
                         <div class="profile-photo">
-                             <img src="https://img.freepik.com/premium-photo/young-handsome-man-with-beard-isolated-keeping-arms-crossed-frontal-position_1368-132662.jpg" alt="" class="media">
+                             <img src="{{ dialog.get_companion_user.avatar.url }}" alt="" class="media">
                         </div>
+
                         <div class="meta-chat">
                             <h2>Bdkigro Dhsnf</h2>
                             <span>active now<i></i></span>
@@ -17,7 +20,7 @@
                     <div class="chat" id="chat-log">
                         <h3>13 Avgust, 2021</h3>
 												{% for message in dialog.messages.all %}
-													<div class="{% if message.author.id == user.profile.id %}my-message{% else %}message-me{% endif %} message">
+													<div class="{{ message.author.id|get_class_message:user.profile.id }} message">
                                 <div class="us-ct02">
                                      <div class="profile-photo fix-photo">
                                         <img src="{{ message.author.avatar.url }}" alt="" class="media">\n' +
@@ -46,8 +49,10 @@
                         </div>
                 </div>
     <script>
-
         const roomName = $('#room-name').attr('value');
+        let chatContainer = $('#chat-log')
+        chatContainer.scrollTop(chatContainer.prop('scrollHeight') - chatContainer.height())
+				{#chatContainer.animate({scrollTop: chatContainer.height()}, 'slow');#}
 
 
         const chatSocket = new WebSocket(
@@ -61,7 +66,7 @@
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
 
-            $('#chat-log').append(
+            chatContainer.append(
     '                        <div class="'+ data['class'] +' message">\n' +
     '                            <div class="us-ct02">\n' +
     '                                 <div class="profile-photo fix-photo">\n' +
@@ -75,6 +80,7 @@
     '                            </div>\n' +
     '                        </div>'
 )
+						chatContainer.scrollTop(chatContainer.prop('scrollHeight') - chatContainer.height())
         };
 
         chatSocket.onclose = function(e) {

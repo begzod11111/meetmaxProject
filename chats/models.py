@@ -15,10 +15,9 @@ class Message(models.Model):
     message = models.TextField(verbose_name="Сообщение")
     pub_date = models.DateTimeField('Дата сообщения', default=timezone.now)
     is_readed = models.BooleanField('Прочитано', default=False)
-    group = models.ForeignKey('Chat', related_name='messages', on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ['pub_date']
+        ordering = ['-pub_date']
 
     def __str__(self):
         return self.message
@@ -27,8 +26,9 @@ class Message(models.Model):
 class Chat(models.Model):
     name = models.CharField(max_length=50, unique=True)
     avatar = models.ImageField(upload_to=MediaPath('chat_ava').directory_path_datatime, blank=True)
-    admins = models.ManyToManyField(Profile, verbose_name="Администраторы", related_name='admin_chats')
+    admins = models.ManyToManyField(Profile, verbose_name="Администраторы", related_name='admin_chats', blank=True)
     members = models.ManyToManyField(Profile, verbose_name="Участник", related_name='member_chats')
+    messages = models.ManyToManyField(Message, verbose_name='Сообщения', related_name='chat', blank=True)
 
     class Type(models.TextChoices):
         GROUP_CHAT = 'GCH', _('Group Chat')
@@ -47,6 +47,8 @@ class Chat(models.Model):
     def save(self, *args, **kwargs):
         return super().save(*args, **kwargs)
 
-    def get_companion_user(self, user):
+    def get_companion_user(self):
         if self.type_chat == 'DCH':
-            return self.members.exclude(user=user)[0]
+            return self.members.all()[0]
+
+

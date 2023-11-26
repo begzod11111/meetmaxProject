@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.query import ValuesIterable
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
@@ -11,6 +12,18 @@ from django.utils.text import slugify
 from utils.managers import MediaPath
 
 # Create your models here.
+
+
+# class UpdateManager(models.Manager):
+#
+#     def values(self, *fields, **expressions):
+#         fields += tuple(expressions)
+#         print(fields)
+#         clone = self._values(*fields, **expressions)
+#         print(clone)
+#         clone._iterable_class = ValuesIterable
+#         print(clone)
+#         return clone
 
 
 class Profile(models.Model):
@@ -81,3 +94,7 @@ class Profile(models.Model):
             'banner': self.banner.name.split('/')[-1].split('.')[0]
         }
         return names
+
+
+
+

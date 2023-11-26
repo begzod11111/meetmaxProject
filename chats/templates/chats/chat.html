@@ -1,7 +1,6 @@
 {% extends 'main/base.html' %}
 {% load static %}
 {% load user_tags %}
-
 {% block css %}
 	<link rel="stylesheet" href="{% static 'chats/css/chat.css' %}">
 {% endblock %}
@@ -14,22 +13,26 @@
                         <input type="text" id="room-name-input">
                         <button type="submit" id="room-name-submit"><i class="ri-search-line"></i></button>
                     </div>
-									{% if dialogs_list.exists %}
+									{% if dialogs_list %}
                     <ul>
 											{% for i in dialogs_list %}
-												{% with user_2=i|get_companion_user:user %}
+												{% with companion=i.get_companion_user %}
                         <li>
                             <a href="{{ i.get_absolute_url }}">
                                 <div class="profile-photo">
-                                    <img src="{{ user_2.avatar.url }}" alt="" class="media">
+                                    <img src="{{ companion.avatar.url }}" alt="" class="media">
                                 </div>
                                 <div class="name-user">
-                                    <span class="username-chat">{{ user_2.user.username }}</span><br>
-                                    <span>Akdjf dkjf dkkdf dkfjkdj dkfj...</span>
+                                    <span class="username-chat">{{ companion.user.username }}</span><br>
+																		{% if i.last_message %}
+                                    	<span>{{ i.last_message }}</span>
+																		{% endif %}
                                 </div>
                                 <div class="time">
                                     <span>12.23 am</span><br>
-                                    <span class="new-messages">1</span>
+																		{% if i.messages.count %}
+                                    	<span class="new-messages">{{ i.messages.count }}</span>
+																		{% endif %}
                                 </div>
                             </a>
                         </li>
@@ -59,5 +62,8 @@
 				let roomName = document.querySelector('#room-name-input').value;
 				window.location.pathname = '/chat/dialog/' + roomName + '/';
 		};
+
+
+
 	</script>
 {% endblock %}
