@@ -220,11 +220,9 @@ class ListCommunityView(BaseSingInMixin, TemplateView):
 		method, lookup = None, None
 		if context['following_or_followers'] == 'following':
 			context['nav'] = 1
-			lookup = 'profile__following'
 			method = Profile.get_following
 		elif context['following_or_followers'] == 'followers':
 			context['nav'] = 2
-			lookup = 'profile__followers'
 			method = Profile.get_followers
 		context['user'] = User.objects.select_related('profile').only(
 			'username',

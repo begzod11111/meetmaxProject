@@ -1,9 +1,11 @@
 import json
-
+from django.utils.timezone import now
 from channels.db import database_sync_to_async
 from django.db.models import Prefetch
+from django.dispatch import Signal
 
-from .models import Message, Chat
+from accounts.models import Profile
+from .models import Message, Chat, Membership
 from asgiref.sync import async_to_sync, sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 
@@ -16,20 +18,29 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
 		# self.last_message = await self.get_last_message()
 		self.room_group_name = f"chat_{self.room.name}"
-
 		# Join room group
+
 		await self.channel_layer.group_add(
 			self.room_group_name, self.channel_name
 		)
 		await self.accept()
 
+		await self.active_online(True)
+
 		await self.user_readed()
+
+		# companion = await self.get_companion()
+		#
+		# if companion:
+		# 	await self.check_status_companion(companion)
 
 	async def disconnect(self, close_code=None):
 		# Leave room group
 		await self.channel_layer.group_discard(
 			self.room_group_name, self.channel_name
 		)
+
+		await self.active_online(False)
 
 	# Receive message from WebSocket
 	async def receive(self, text_data):
@@ -43,20 +54,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				"message": message.message,
 				'author_id': self.user.id,
 				'author_ava_url': message.author.avatar.url,
-				'publish_date': message.pub_date.timestamp()
+				'publish_date': message.pub_date.isoformat(),
 			}
 		)
 
 	# Receive message from room group
 	async def chat_message(self, event):
-		if self.check_user_message(event['author_id']):
-			event['class'] = 'my-message'
-		else:
-			self.user_readed(event["message_id"])
-			event['class'] = 'message-me'
-
+		if event['type'] == 'chat.message':
+			if self.check_user_message(event['author_id']):
+				event['class'] = 'my-message'
+			else:
+				await self.user_readed(event["message_id"])
+				event['class'] = 'message-me'
 		# Send message to WebSocket
 		await self.send(text_data=json.dumps(event))
+
+	async def user_online(self, event):
+		print('online')
 
 	@database_sync_to_async
 	def get_chat(self):
@@ -107,5 +121,42 @@ class ChatConsumer(AsyncWebsocketConsumer):
 				i.is_readed = True
 				i.save()
 
+	@database_sync_to_async
+	def active_online(self, active: bool):
+		client = Membership.objects.get(
+			chat=self.room,
+			profile__user=self.user
+		)
+		client.is_online = active
+		if not active:
+			client.last_activity = now()
+		client.save()
+
+	@database_sync_to_async
+	def get_companion(self):
+		if self.room.type_chat == 'DCH':
+			return self.room.members.exclude(id=self.user.id)[0]
+		return False
+
+	@database_sync_to_async
+	def check_status_companion(self, companion: Profile):
+		msh = companion.memberships.get(
+			chat=self.room,
+		)
+		if msh.is_online:
+			self.channel_layer.group_send(
+				self.room_group_name, {
+					"type": "signal",
+					'satus': True
+
+				}
+			)
+		self.channel_layer.group_send(
+			self.room_group_name, {
+				'type': 'signal',
+				'status': False,
+				'last_activity': msh.last_activity.isoformat()
+			}
+		)
 
 

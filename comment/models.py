@@ -27,7 +27,13 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['-count_likes', '-publish_date']
+    @classmethod
+    def get_comment_rating(cls, comment_id):
+        comment = cls.objects.annotate(
+            comment_rating=(Count('likes', filter=Q(likes__like_or_dislike=True)) -
+                            Count('likes', filter=Q(likes__like_or_dislike=False)))
+        ).only('pk', 'count_likes').get(id=comment_id)
+        comment.count_likes = comment.comment_rating
+        comment.save()
+        return comment
 
-    def get_count_rating(self):
-        self.count_likes = Count('likes', filter=Q(likes__like_or_dislike=True))
-        return self.count_likes

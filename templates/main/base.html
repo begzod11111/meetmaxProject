@@ -63,7 +63,7 @@
                         <ul>
                             <li class="list_item"><a href="{% url 'posts_list' %}"><i class="ri-home-4-line"></i><span>Feed</span></a></li>
                             <li class="list_item"><a href="{% url 'accounts:user-community' following_or_followers='following' %}"><i class="ri-group-line"></i><span>My community</span></a></li>
-                            <li class="list_item"><a href="{% url 'chats:dialogs' %}"><i class="ri-message-3-line"></i><span>Messages</span></a></li>
+                            <li class="list_item"><a href="{% url 'chats:chats' 'dialogues' %}"><i class="ri-message-3-line"></i><span>Messages</span></a></li>
                             <li class="list_item"><a href="#"><i class="ri-notification-3-line"></i><span>Notification</span></a></li>
                             <li class="list_item"><a href="{% url 'article:article_list' %}"><i class="ri-global-line"></i><span>Explore</span></a></li>
                             <li class="list_item"><a href="{% if authenticated %}{% url 'accounts:user-profile' user.profile.slug %}{% else %}{% url 'accounts:sing_in' %}{% endif %}"><i class="ri-user-line"></i><span>Profile</span></a></li>

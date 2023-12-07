@@ -1,3 +1,4 @@
+from django.db.models import Prefetch
 from django.http import HttpResponse, JsonResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -31,27 +32,31 @@ class AddComment(JsonView):
 class AddLikeCommentView(View):
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            comment = Comment.objects.only('pk').get(id=request.POST['comment_id'])
-            content_type = ContentType.objects.get_for_model(comment)
+            comment_id = request.POST['comment_id']
+            content_type = ContentType.objects.get_for_model(Comment)
             like_or_dislike = True if request.POST['like_or_dislike'] == 'like' else False
             try:
                 like = Like.objects.only('like_or_dislike').get(
-                    content_type=content_type, object_id=comment.pk,
+                    content_type=content_type, object_id=comment_id,
                     user__id=request.user.id)
                 if like.like_or_dislike == like_or_dislike:
                     like.delete()
-                    return JsonResponse({
-                        'status': True,
-                        'count': comment.get_count_rating()
-                    })
+                like.like_or_dislike = like_or_dislike
+                like.save()
+                comment = Comment.get_comment_rating(comment_id)
+                return JsonResponse({
+                    'status': True,
+                    'count': comment.count_likes
+                })
 
             except Like.DoesNotExist:
-                like = Like(content_object=comment, user=request.user, like_or_dislike=like_or_dislike)
+                like = Like(content_type=content_type, object_id=comment_id, user=request.user, like_or_dislike=like_or_dislike)
                 like.save()
+                comment = Comment.get_comment_rating(comment_id)
                 if like.pk:
                     return JsonResponse({
                         'status': True,
-                        'count': comment.get_count_rating()
+                        'count': comment.count_likes
                         })
         return HttpResponse('error')
 

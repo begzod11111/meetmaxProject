@@ -8,8 +8,9 @@
                         </div>
 
                         <div class="meta-chat">
-                            <h2>Bdkigro Dhsnf</h2>
-                            <span>active now<i></i></span>
+                            <h2>{{ dialog.get_companion_user.user.username }}
+														</h2>
+                            <span id="text-date">active now<i class="" id="active-icone"></i></span>
                         </div>
                         <div class="icon-fun">
                             <button><i class="ri-phone-line"></i></button>
@@ -52,7 +53,6 @@
         const roomName = $('#room-name').attr('value');
         let chatContainer = $('#chat-log')
         chatContainer.scrollTop(chatContainer.prop('scrollHeight') - chatContainer.height())
-				{#chatContainer.animate({scrollTop: chatContainer.height()}, 'slow');#}
 
 
         const chatSocket = new WebSocket(
@@ -63,25 +63,79 @@
             + '/'
         );
 
+        function getDate(datetime) {
+            let now = new Date()
+						let weekDay = {
+								0: 'Sunday',
+								1: 'Saturday',
+								2: 'Friday',
+								3: 'Thursday',
+								4: 'Wednesday',
+								5: 'Tuesday',
+								6: 'Monday',
+						}
+						if (datetime.getDay() === now.getDay()) {
+								return 'Today ' + String(datetime.getHours()) + ':' + String(datetime.getMinutes())
+						}
+
+        }
+
+
+				{#chatSocket.onopen = function (event){#}
+				{#	setInterval(ajax, 5000);#}
+				{#	let companionUsername = '{{ dialog.get_companion_user.user.username }}'#}
+				{##}
+				{#	function ajax() {#}
+        {#      $.ajax({#}
+				{#					url: '{% url 'chats:check-satus' %}',#}
+				{#					type: 'GET',#}
+				{#					dataType: 'json',#}
+				{#					data: {#}
+				{#							"companion_username": companionUsername,#}
+				{#							"room_name": roomName#}
+        {#          },#}
+        {#          success: function (data) {#}
+				{#							let spanDate = $('#text-date')#}
+				{#							let btActiv = $('#active-icone')#}
+				{#							if (data['status']){#}
+				{#									if (!btActiv.hasClass('activity')){#}
+				{#											btActiv.addClass('activity')#}
+				{#									}#}
+				{#							} else {#}
+				{#									let dateTime = new Date(JSON.parse(data)['last_activity'])#}
+				{#									spanDate.text(getDate(dateTime))#}
+				{##}
+				{#							}#}
+				{##}
+        {#          }#}
+				{#			})#}
+        {#  }#}
+
+
+
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-
-            chatContainer.append(
-    '                        <div class="'+ data['class'] +' message">\n' +
-    '                            <div class="us-ct02">\n' +
-    '                                 <div class="profile-photo fix-photo">\n' +
-    '                                    <img src="'+ data['author_ava_url'] +'" alt="" class="media">\n' +
-    '                                </div>\n' +
-    '                            </div>\n' +
-    '\n' +
-    '                            <span class="text-message">'+ data['message'] +'</span>\n' +
-    '                            <div class="fun-message">\n' +
-    '                                <button><i class="ri-more-fill"></i></button>\n' +
-    '                            </div>\n' +
-    '                        </div>'
-)
-						chatContainer.scrollTop(chatContainer.prop('scrollHeight') - chatContainer.height())
-        };
+            console.log(data)
+            if (data['type'] === 'chat.message') {
+                chatContainer.append(
+                    '                        <div class="' + data['class'] + ' message">\n' +
+                    '                            <div class="us-ct02">\n' +
+                    '                                 <div class="profile-photo fix-photo">\n' +
+                    '                                    <img src="' + data['author_ava_url'] + '" alt="" class="media">\n' +
+                    '                                </div>\n' +
+                    '                            </div>\n' +
+                    '\n' +
+                    '                            <span class="text-message">' + data['message'] + '</span>\n' +
+                    '                            <div class="fun-message">\n' +
+                    '                                <button><i class="ri-more-fill"></i></button>\n' +
+                    '                            </div>\n' +
+                    '                        </div>'
+                )
+                chatContainer.scrollTop(chatContainer.prop('scrollHeight') - chatContainer.height())
+            } else if (data['type'] === 'signal'){
+                console.log('dddd')
+						}
+        }
 
         chatSocket.onclose = function(e) {
             console.error('Chat socket closed unexpectedly');

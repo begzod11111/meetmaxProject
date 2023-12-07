@@ -73,6 +73,15 @@ input[type="file"] {
     width: 100%;
 }
 
+.footer-banner #add_dialogchat {
+    position: absolute;
+    right: 50px;
+    font-size: 25px;
+    margin: 0;
+    top: 30px;
+}
+
+
 .header-profile .custom-file-upload {
     border-radius: 50%;
     background: #ebeaea;

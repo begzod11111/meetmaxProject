@@ -8,11 +8,16 @@
 {% block content %}
 
 	<div class="main-ct">
-                <div class="chats-list-user">
+                <div class="chats-list-user" id="chats-list">
                     <div class="search">
                         <input type="text" id="room-name-input">
                         <button type="submit" id="room-name-submit"><i class="ri-search-line"></i></button>
                     </div>
+									<div class="nav-bar-message">
+										<a href="{% url 'chats:chats' 'dialogues' %}" class="{% if type_chats == 'DCH' %}activ_tag{% endif %}">Dialogs</a>
+										<a href="{% url 'chats:chats' 'groups' %}" class="{% if type_chats == 'GCH' %}activ_tag{% endif %}">Groups</a>
+										<a href="{% url 'chats:chats' 'channels' %}" class="{% if type_chats == 'CH' %}activ_tag{% endif %}">Channels</a>
+									</div>
 									{% if dialogs_list %}
                     <ul>
 											{% for i in dialogs_list %}
@@ -20,18 +25,18 @@
                         <li>
                             <a href="{{ i.get_absolute_url }}">
                                 <div class="profile-photo">
-                                    <img src="{{ companion.avatar.url }}" alt="" class="media">
+                                    <img src="{% if companion.avatar.url %}{{ companion.avatar.url }}{% else %}{{ i.avatar.url }}{% endif %}" alt="" class="media">
                                 </div>
                                 <div class="name-user">
-                                    <span class="username-chat">{{ companion.user.username }}</span><br>
+                                    <span class="username-chat">{% if i.type_chat == 'DCH' %}{{ companion.user.username }}{% else %}{{ i.name }}{% endif %}</span><br>
 																		{% if i.last_message %}
                                     	<span>{{ i.last_message }}</span>
 																		{% endif %}
                                 </div>
                                 <div class="time">
                                     <span>12.23 am</span><br>
-																		{% if i.messages.count %}
-                                    	<span class="new-messages">{{ i.messages.count }}</span>
+																		{% if i.notreaded_message_count %}
+                                    	<span class="new-messages">{{ i.notreaded_message_count }}</span>
 																		{% endif %}
                                 </div>
                             </a>
@@ -39,10 +44,39 @@
 												{% endwith %}
 											{% endfor %}
 										</ul>
+										<button class="add_chat_list add-chat" type="button">
+											<i class="ri-add-line"></i>
+										</button>
 									{% else %}
-										<a href="" class="add_chat"><i class="ri-add-line"></i>Add chat</a>
+										<button type="button" class="add_chat add-chat"><i class="ri-add-line"></i>Add chat</button>
 									{% endif %}
                 </div>
+								<div class="form-chat chat-close" id="form-chat">
+									<form method="post" enctype="multipart/form-data" action="{% url 'chats:add-chat' %}" class="chat-form-ct">{% csrf_token %}
+										<ul class="section-user">
+												{% for i in members %}
+													<li value="{{ i.id }}" class="">
+														<div class="profile-photo">
+																<img src="{{ i.avatar.url }}" alt="" class="media">
+														</div>
+														<div class="info-member">
+															<h2>{{ i.user.username }}</h2>
+															<span>{{ i.user.last_name }}{{ i.user.first_name }}</span>
+														</div>
+													</li>
+												{% endfor %}
+										</ul>
+										<input type="text" id="name" name="name">
+										<label for="avatar">file</label>
+										<input type="file" id="avatar" name="avatar">
+										<ul id="type_chat">
+											<li class="" data-value="GCH"><i class="ri-group-line"></i></li>
+											<li class="" data-value="DCH"><i class="ri-wechat-line"></i></li>
+											<li class="" data-value="CH"><i class="ri-megaphone-line"></i></li>
+										</ul>
+										<button type="submit" id="add_chat">Add chat</button>
+									</form>
+								</div>
 							{% if dialog %}
 								{% include 'chats/personal_chat.html' %}
 							{% endif %}
@@ -51,6 +85,8 @@
 
 {% block js %}
 	<script>
+		let members = [];
+		let typeChat = [];
 		document.querySelector('#room-name-input').focus();
 		document.querySelector('#room-name-input').onkeyup = function(e) {
 				if (e.key === 'Enter') {  // enter, return
@@ -62,6 +98,86 @@
 				let roomName = document.querySelector('#room-name-input').value;
 				window.location.pathname = '/chat/dialog/' + roomName + '/';
 		};
+
+		$('#chats-list').on('click', '.add-chat', function () {
+			let formChat = $('#form-chat')
+			if (formChat.hasClass('chat-close')) {
+          formChat.removeClass('chat-close')
+      }
+			else {
+					formChat.addClass('chat-close')
+			}
+
+		})
+
+		$('.section-user').on('click', 'li', function () {
+			let idUser = String(this.value)
+			let bt = $(this)
+			if (members.includes(idUser)){
+				members = members.filter(item => item !== idUser)
+				bt.removeClass('activ_member')
+			} else {
+				members.push(idUser)
+				bt.addClass('activ_member')
+			}
+			console.log(members)
+    })
+
+		let btTypeChat = $('#type_chat li');
+
+		btTypeChat.click(function (){
+			let val = $(this).data('value')
+			if (!typeChat.length){
+				typeChat.unshift(val)
+				$(this).addClass('activity-type')
+
+			} else {
+				if (typeChat[0] !== val){
+					typeChat.shift()
+					typeChat.unshift(val)
+					styleBt(val)
+					$(this).addClass('activity-type')
+
+				}
+			}
+		})
+
+		function styleBt(val) {
+			for (let i = 0; i < 3; i++){
+				let obj = $(btTypeChat[i])
+				if (obj.hasClass('activity-type') && obj.data('value') !== val){
+					obj.removeClass('activity-type')
+				}
+			}
+	 	}
+
+
+		$('.chat-form-ct').submit(function (e) {
+				e.preventDefault()
+				let dataForm = new FormData($(this)[0])
+				for (let i = 0; i < members.length; i++){
+					dataForm.append('members', members[i])
+				}
+				dataForm.append('type_chat', typeChat[0])
+				$.ajax({
+						url: '{% url 'chats:add-chat' %}',
+						method: 'POST',
+						headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+						contentType: false,
+						processData: false,
+						dataType: 'json',
+						data: dataForm,
+						success: function (data) {
+								window.location.pathname = data['path']
+            }
+			 	})
+	 	})
+
+
+
+
+
+
 
 
 

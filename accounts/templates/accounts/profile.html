@@ -12,26 +12,30 @@
         <div class="profile-ct">
             <div class="header-profile">
                 <div class="media-ct banner-ct">
-									<form method="post" id="form-banner" enctype="multipart/form-data">
-										<label for="banner-photo" class="custom-file-upload">
-												<i class="ri-upload-cloud-2-line"></i>
-												Edit Cover Photo
-										</label>
-										<input name="file" id="banner-photo" type="file"/>
-										<button type="submit" style="display: none" id="bt-form-banner"></button>
-									</form>
+									{% if not guest %}
+										<form method="post" id="form-banner" enctype="multipart/form-data">
+											<label for="banner-photo" class="custom-file-upload">
+													<i class="ri-upload-cloud-2-line"></i>
+													Edit Cover Photo
+											</label>
+											<input name="file" id="banner-photo" type="file"/>
+											<button type="submit" style="display: none" id="bt-form-banner"></button>
+										</form>
+									{% endif %}
 
                     <img id="bannet" class="media" src="{{ user.profile.banner.url }}" alt="">
                 </div>
                 <div class="footer-banner">
+										<button type="button" id="add_dialogchat" data-value="{{ user.profile.id }}"><i class="ri-wechat-line"></i></button>
                     <div class="media-ct user-main-photo">
                         <img  src="{{ user.profile.avatar.url }}" alt="" class="">
                     </div>
-
+									{% if not guest %}
                     <label for="user-photo" class="custom-file-upload">
                         <i class="ri-upload-cloud-2-line"></i>
                     </label>
                     <input id="user-photo" type="file"/>
+									{% endif %}
                     <div class="meta-user">
 
                         <span class="user-name">@{{ user.username }}</span><br>
@@ -118,5 +122,21 @@
 						}
 				})
 		})
+		let btAddChat = $('#add_dialogchat')
+		btAddChat.click(function () {
+
+				$.ajax({
+						url: "{% url 'chats:add-dchat' %}",
+						dataType: 'json',
+						headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+						method: 'POST',
+						data: {'user_id': btAddChat.data('value')},
+						success: function (data) {
+								if (data['satus']){
+										window.location.pathname = data['path']
+                }
+            }
+				})
+    })
 	</script>
 {% endblock %}
